@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/cgy.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/cgy.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/cgy.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/cgy.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/cgy.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/cgy.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/cgy.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="(四）断路器(Hystrix)在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一粒兴陈">
+<meta property="og:url" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/index.html">
+<meta property="og:site_name" content="一粒兴陈">
+<meta property="og:description" content="(四）断路器(Hystrix)在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_request_1542957106_31699.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_hystrix1_1542957273_15466.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_service_1542961880_976.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen_1542962032_5519.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen1_1542962165_24108.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_jiagou_1542962312_10677.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_jiagou_1542963349_14894.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_eurka_1542966512_26528.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_hystrix_1542966659_32128.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_hystrix_1542966899_11671.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen_1542968016_24989.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen_1542968134_27742.png">
+<meta property="og:updated_time" content="2018-11-26T03:09:12.665Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一粒兴陈">
+<meta name="twitter:description" content="(四）断路器(Hystrix)在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线">
+<meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_request_1542957106_31699.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/cgy.github.io/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/">
+
+
+
+
+
+  <title> | 一粒兴陈</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container  page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/cgy.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一粒兴陈</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录学习的每个时刻！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/cgy.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/cgy.github.io/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/cgy.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/cgy.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/cgy.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/cgy.github.io/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/cgy.github.io/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/cgy.github.io/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陈广永">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/cgy.github.io/images/timg (2).jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一粒兴陈">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-14T14:54:20+08:00">
+                2019-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="四）断路器-Hystrix"><a href="#四）断路器-Hystrix" class="headerlink" title="(四）断路器(Hystrix)"></a>(四）断路器(Hystrix)</h1><p>在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫痪。服务与服务之间的依赖性，故障会传播，会对整个微服务系统造成灾难性的严重后果，这就是服务故障的“雪崩”效应。</p>
+<p><em>为了解决这个问题，业界提出了断路器模型。</em></p>
+<h2 id="断路器介绍"><a href="#断路器介绍" class="headerlink" title="断路器介绍"></a>断路器介绍</h2><p>Netflix开源了Hystrix组件，实现了断路器模式，SpringCloud对这一组件进行了整合。 在微服务架构中，一个请求需要调用多个服务是非常常见的，如下图：<br><img src="_v_images/_request_1542957106_31699.png" width="700" hegiht="313"></p>
+<p>较底层的服务如果出现故障，会导致连锁故障。当对特定的服务的调用的不可用达到一个阀值（Hystric 是5秒20次） 断路器将会被打开。<br><img src="_v_images/_hystrix1_1542957273_15466.png" width="700" hegiht="313"><br>断路打开后，可用避免连锁故障，fallback方法可以直接返回一个固定值。</p>
+<h2 id="在Ribbon中使用断路器"><a href="#在Ribbon中使用断路器" class="headerlink" title="在Ribbon中使用断路器"></a>在Ribbon中使用断路器</h2><p>改造之前的Chen-Service-Ribbon项目</p>
+<p>pom.xml文件中添加hystrix的依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;!-- 使用@HystrixCommand 必须引入--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">     &lt;groupId&gt;com.netflix.hystrix&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;hystrix-javanica&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="项目启动类"><a href="#项目启动类" class="headerlink" title="项目启动类"></a>项目启动类</h3><p>添加@EnableHystrix注解开启Hystrix</p>
+<figure class="highlight plain"><figcaption><span>com.chen.chenserviceribbon;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line">import org.springframework.cloud.client.loadbalancer.LoadBalanced;</span><br><span class="line">import org.springframework.cloud.netflix.hystrix.EnableHystrix;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.web.client.RestTemplate;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">@EnableHystrix</span><br><span class="line">public class ChenServiceRibbonApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        SpringApplication.run(ChenServiceRibbonApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * @description: 注入restTemplate, 并且开启负载均衡</span><br><span class="line">     */</span><br><span class="line">    @Bean</span><br><span class="line">    @LoadBalanced</span><br><span class="line">    public RestTemplate createRestTemplate() &#123;</span><br><span class="line">        return new RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="改造HelloServiceImpl类"><a href="#改造HelloServiceImpl类" class="headerlink" title="改造HelloServiceImpl类"></a>改造HelloServiceImpl类</h3><p>在showPort方法上加上@HystrixCommand注解。该注解对该方法创建了熔断器的功能，并指定了fallbackMethod熔断方法，熔断方法直接返回了一个字符串，代码如下：</p>
+<figure class="highlight plain"><figcaption><span>com.chen.chenserviceribbon.servcie.impl;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import com.chen.chenserviceribbon.servcie.HelloService;</span><br><span class="line">import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line">import org.springframework.web.client.RestTemplate;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/23 11:05</span><br><span class="line"> * @Description:</span><br><span class="line"> */</span><br><span class="line">@Service</span><br><span class="line">public class HelloServiceImpl implements HelloService &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private RestTemplate restTemplate;</span><br><span class="line">    /**</span><br><span class="line">     * @description: 展示服务器端口</span><br><span class="line">     */</span><br><span class="line">    @HystrixCommand(fallbackMethod = &quot;handleError&quot;)</span><br><span class="line">    @Override</span><br><span class="line">    public String showPort() &#123;</span><br><span class="line">        return restTemplate.getForObject(&quot;http://CHEN-EUREKA-CLIENT/login/showPort&quot;,String.class);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * @description: 断路器方法</span><br><span class="line">     */</span><br><span class="line">    public String handleError() &#123;</span><br><span class="line">        return &quot;I am so sorry,Server has error&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="启动项目："><a href="#启动项目：" class="headerlink" title="启动项目："></a>启动项目：</h3><ul>
+<li>Chen-Eureka-Server（注册中心）</li>
+<li>Chen-Eureka-Client（CHEN-EUREKA-CLIENT服务一）</li>
+<li>Chen-Service-Ribbon（CHEN-SERVICE-RIBBON服务消费者）</li>
+</ul>
+<p><img src="_v_images/_service_1542961880_976.png" width="700" hegiht="313"></p>
+<p>访问Ahut-Service-Ribbon <a href="http://localhost:8930/C1/hello" target="_blank" rel="noopener">http://localhost:8930/C1/hello</a> </p>
+<p><img src="_v_images/_fangwen_1542962032_5519.png" width="700" hegiht="313"></p>
+<p>此时，关闭Chen-Eureka-Client服务，再次访问Chen-Service-Ribbon<br><a href="http://localhost:8930/C1/hello" target="_blank" rel="noopener">http://localhost:8930/C1/hello</a></p>
+<p><img src="_v_images/_fangwen1_1542962165_24108.png" width="700" hegiht="313"></p>
+<p>这就说明当 Chen-Eureka-Client 工程不可用的时候，Chen-Service-Ribbon调用 Chen-Eureka-Client的API接口时，会执行快速失败，直接返回一组字符串，而不是等待响应超时，这很好的控制了容器的线程阻塞</p>
+<h3 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h3><p><img src="_v_images/_jiagou_1542962312_10677.png" width="700" hegiht="313"></p>
+<h2 id="在Feign中使用断路器"><a href="#在Feign中使用断路器" class="headerlink" title="在Feign中使用断路器"></a>在Feign中使用断路器</h2><p>Feign是自带断路器的，在D版本的Spring Cloud中，它没有默认打开。需要在配置文件中配置打开它。</p>
+<ul>
+<li>改造之前的Chen-Service-Feign项目</li>
+<li>在application.properties配置文件中打开hystrix配置：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 配置启动断路器</span><br><span class="line">feign.hystrix.enabled=true</span><br></pre></td></tr></table></figure>
+<h3 id="HelloServiceHystrix需要实现HelloService-接口"><a href="#HelloServiceHystrix需要实现HelloService-接口" class="headerlink" title="HelloServiceHystrix需要实现HelloService 接口"></a>HelloServiceHystrix需要实现HelloService 接口</h3><p>并注入到Ioc容器中，代码如下:<br><figure class="highlight plain"><figcaption><span>com.chen.chenservicefeign.service.impl;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import com.chen.chenservicefeign.service.HelloService;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/23 16:45</span><br><span class="line"> * @Description:</span><br><span class="line"> */</span><br><span class="line">@Component</span><br><span class="line">public class HelloServiceHystrix implements HelloService &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:断路器方法</span><br><span class="line">     * @param: </span><br><span class="line">     * @return: </span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/23 16:46</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public String showPort() &#123;</span><br><span class="line">        return &quot;I am so sorry,Server has error&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="在FeignClient的HelloService接口的注解"><a href="#在FeignClient的HelloService接口的注解" class="headerlink" title="在FeignClient的HelloService接口的注解"></a>在FeignClient的HelloService接口的注解</h3><p>中加上fallback的指定类就行了：</p>
+<figure class="highlight plain"><figcaption><span>com.chen.chenservicefeign.service;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import com.chen.chenservicefeign.service.impl.HelloServiceHystrix;</span><br><span class="line">import org.springframework.cloud.netflix.feign.FeignClient;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/23 14:42</span><br><span class="line"> * @Description:</span><br><span class="line"> */</span><br><span class="line">@FeignClient(value = &quot;CHEN-EUREKA-CLIENT&quot;,fallback = HelloServiceHystrix.class)</span><br><span class="line">public interface HelloService &#123;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/login/showPort&quot;)</span><br><span class="line">    String showPort();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * @description: 演示带参数</span><br><span class="line">     */</span><br><span class="line">    //@GetMapping(value = &quot;/demo&quot;)</span><br><span class="line">    //void demo(@RequestParam(value = &quot;name&quot;) String name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="启动项目：-1"><a href="#启动项目：-1" class="headerlink" title="启动项目："></a>启动项目：</h3><ul>
+<li>Chen-Eureka-Server（注册中心）</li>
+<li>Chen-Eureka-Client（CHEN-EUREKA-CLIENT服务一）</li>
+<li><p>Chen-Service-Feign（CHEN-SERVICE-FEIGN服务消费者）</p>
+</li>
+<li><p>1.访问eureka </p>
+</li>
+<li>2.访问Chen-Service-Feign项目 <a href="http://localhost:8940/C1/hello：" target="_blank" rel="noopener">http://localhost:8940/C1/hello：</a> </li>
+<li>3.此时关闭Chen-Eureka-Client-One项目，再次访问Chen-Service-Feign项目 <a href="http://localhost:8940/C1/hello：" target="_blank" rel="noopener">http://localhost:8940/C1/hello：</a> </li>
+</ul>
+<p>可以看到断路器起作用（不再截图）</p>
+<p><img src="_v_images/_jiagou_1542963349_14894.png" width="700" hegiht="313"></p>
+<h2 id="断路器：Hystrix-仪表盘-Hystrix-Dashboard"><a href="#断路器：Hystrix-仪表盘-Hystrix-Dashboard" class="headerlink" title="断路器：Hystrix 仪表盘(Hystrix Dashboard )"></a>断路器：Hystrix 仪表盘(Hystrix Dashboard )</h2><p>改造Chen-Service-Ribbon项目，Chen-Service-Feign项目的改造和这个一样</p>
+<ul>
+<li>使用过程不要随便更换依赖镜像否则会报错</li>
+</ul>
+<h3 id="添加依赖："><a href="#添加依赖：" class="headerlink" title="添加依赖："></a>添加依赖：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix-dashboard&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.3.6.RELEASE&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="在主程序启动类中加入-EnableHystrixDashboard注解，"><a href="#在主程序启动类中加入-EnableHystrixDashboard注解，" class="headerlink" title="在主程序启动类中加入@EnableHystrixDashboard注解，"></a>在主程序启动类中加入@EnableHystrixDashboard注解，</h3><p>开启hystrixDashboard：</p>
+<ul>
+<li>如果不能加入注解，请检查下版本，是否使用了2.X版本的springboot</li>
+<li>可以指定发行版本号，来解决</li>
+</ul>
+<figure class="highlight plain"><figcaption><span>com.chen.chenserviceribbon;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line">import org.springframework.cloud.client.loadbalancer.LoadBalanced;</span><br><span class="line">import org.springframework.cloud.netflix.hystrix.EnableHystrix;</span><br><span class="line">import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.web.client.RestTemplate;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">@EnableHystrix</span><br><span class="line">@EnableHystrixDashboard</span><br><span class="line">public class ChenServiceRibbonApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        SpringApplication.run(ChenServiceRibbonApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * @description: 注入restTemplate, 并且开启负载均衡</span><br><span class="line">     */</span><br><span class="line">    @Bean</span><br><span class="line">    @LoadBalanced</span><br><span class="line">    public RestTemplate createRestTemplate() &#123;</span><br><span class="line">        return new RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="启动项目：-2"><a href="#启动项目：-2" class="headerlink" title="启动项目："></a>启动项目：</h3><ul>
+<li>Chen-Eureka-Server（注册中心）</li>
+<li>Chen-Eureka-Client（CHEN-EUREKA-CLIENT服务一）</li>
+<li><p>Chen-Service-Ribbon（CHEN-SERVICE-RIBBON服务消费者）</p>
+</li>
+<li><ol>
+<li>访问eureka： </li>
+</ol>
+</li>
+</ul>
+<p><img src="_v_images/_eurka_1542966512_26528.png" width="700" hegiht="313"></p>
+<ul>
+<li><ol start="2">
+<li>访问hystrix仪表盘 <a href="http://localhost:8930/hystrix" target="_blank" rel="noopener">http://localhost:8930/hystrix</a> </li>
+</ol>
+</li>
+</ul>
+<p><img src="_v_images/_hystrix_1542966659_32128.png" width="700" hegiht="313"></p>
+<ul>
+<li><ol start="3">
+<li>修改以下部分：<br>复制浏览器的地址栏，粘贴到输入框，并且加上.stream<br>自定义一个Title<br>修改完后，点击monitor stream，进入下一个页面</li>
+</ol>
+</li>
+</ul>
+<p><img src="_v_images/_hystrix_1542966899_11671.png" width="700" hegiht="313"></p>
+<ul>
+<li><ol start="4">
+<li>中间访问一下  Chen-Service-Ribbon项目 <a href="http://localhost:8930/C1/hello" target="_blank" rel="noopener">http://localhost:8930/C1/hello</a> </li>
+</ol>
+</li>
+</ul>
+<p><img src="_v_images/_fangwen_1542968016_24989.png" width="700" hegiht="313"></p>
+<ul>
+<li><ol start="5">
+<li>刷新下刚才进入的监控界面</li>
+</ol>
+</li>
+</ul>
+<p><img src="_v_images/_fangwen_1542968134_27742.png" width="700" hegiht="313"></p>
+<p>如果出现问题：不能监控，参考<br><a href="https://www.cnblogs.com/mark7/p/8920288.html" target="_blank" rel="noopener">https://www.cnblogs.com/mark7/p/8920288.html</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="陈广永 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/cgy.github.io/images/timg (2).jpg" alt="陈广永">
+            
+              <p class="site-author-name" itemprop="name">陈广永</p>
+              <p class="site-description motion-element" itemprop="description">挑战自我，不断突破！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/cgy.github.io/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/chenguangyong" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/your-user-name" target="_blank" title="微博">
+                      
+                        <i class="fa fa-fw fa-globe"></i>微博</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://douban.com/people/your-user-name" target="_blank" title="豆瓣">
+                      
+                        <i class="fa fa-fw fa-globe"></i>豆瓣</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#四）断路器-Hystrix"><span class="nav-number">1.</span> <span class="nav-text">(四）断路器(Hystrix)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#断路器介绍"><span class="nav-number">1.1.</span> <span class="nav-text">断路器介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Ribbon中使用断路器"><span class="nav-number">1.2.</span> <span class="nav-text">在Ribbon中使用断路器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目启动类"><span class="nav-number">1.2.1.</span> <span class="nav-text">项目启动类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改造HelloServiceImpl类"><span class="nav-number">1.2.2.</span> <span class="nav-text">改造HelloServiceImpl类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动项目："><span class="nav-number">1.2.3.</span> <span class="nav-text">启动项目：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目架构"><span class="nav-number">1.2.4.</span> <span class="nav-text">项目架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Feign中使用断路器"><span class="nav-number">1.3.</span> <span class="nav-text">在Feign中使用断路器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HelloServiceHystrix需要实现HelloService-接口"><span class="nav-number">1.3.1.</span> <span class="nav-text">HelloServiceHystrix需要实现HelloService 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在FeignClient的HelloService接口的注解"><span class="nav-number">1.3.2.</span> <span class="nav-text">在FeignClient的HelloService接口的注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动项目：-1"><span class="nav-number">1.3.3.</span> <span class="nav-text">启动项目：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#断路器：Hystrix-仪表盘-Hystrix-Dashboard"><span class="nav-number">1.4.</span> <span class="nav-text">断路器：Hystrix 仪表盘(Hystrix Dashboard )</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加依赖："><span class="nav-number">1.4.1.</span> <span class="nav-text">添加依赖：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在主程序启动类中加入-EnableHystrixDashboard注解，"><span class="nav-number">1.4.2.</span> <span class="nav-text">在主程序启动类中加入@EnableHystrixDashboard注解，</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动项目：-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">启动项目：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈广永</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/cgy.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/cgy.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

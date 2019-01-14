@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/cgy.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/cgy.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/cgy.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/cgy.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/cgy.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/cgy.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/cgy.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="(五）路由网关(Zuul)微服务架构在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。 一个简单的微服务系统如下图：  在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一粒兴陈">
+<meta property="og:url" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/index.html">
+<meta property="og:site_name" content="一粒兴陈">
+<meta property="og:description" content="(五）路由网关(Zuul)微服务架构在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。 一个简单的微服务系统如下图：  在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_weifuwujia_1543199148_7870.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_shezhi_1543200040_17170.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_eureka_1543201892_22830.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_apiribbon_1543202480_29380.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_apifeign_1543202702_8886.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_jiagou_1543202825_11123.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_apiribbon_1543224143_25322.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_apifeign_1543224196_12373.png">
+<meta property="og:updated_time" content="2018-11-26T09:23:38.619Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一粒兴陈">
+<meta name="twitter:description" content="(五）路由网关(Zuul)微服务架构在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。 一个简单的微服务系统如下图：  在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再">
+<meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_weifuwujia_1543199148_7870.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/cgy.github.io/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/">
+
+
+
+
+
+  <title> | 一粒兴陈</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container  page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/cgy.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一粒兴陈</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录学习的每个时刻！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/cgy.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/cgy.github.io/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/cgy.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/cgy.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/cgy.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/cgy.github.io/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/cgy.github.io/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/cgy.github.io/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(五）路由网关(Zuul)/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陈广永">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/cgy.github.io/images/timg (2).jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一粒兴陈">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-14T14:54:20+08:00">
+                2019-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="五）路由网关-Zuul"><a href="#五）路由网关-Zuul" class="headerlink" title="(五）路由网关(Zuul)"></a>(五）路由网关(Zuul)</h1><h2 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h2><p>在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。</p>
+<p>一个简单的微服务系统如下图：</p>
+<p><img src="_v_images/_weifuwujia_1543199148_7870.png" width="600" hegiht="100"></p>
+<p>在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再到具体的服。，服务统一注册到高可用的服务注册中心集群，服务的所有的配置文件由配置服务管理（下一篇文章讲述），配置服务的配置文件放在git仓库，方便开发人员随时改配置。</p>
+<h2 id="Zuul简介"><a href="#Zuul简介" class="headerlink" title="Zuul简介"></a>Zuul简介</h2><p>Zuul的主要功能是路由转发和过滤器。路由功能是微服务的一部分，比如／api/user转发到到user服务，/api/shop转发到到shop服务。zuul默认和Ribbon结合实现了负载均衡的功能。</p>
+<h2 id="创建Chen-Service-Zuul项目"><a href="#创建Chen-Service-Zuul项目" class="headerlink" title="创建Chen-Service-Zuul项目"></a>创建Chen-Service-Zuul项目</h2><p>新创建一个工程Chen-Service-Zuul，创建过程和Chen-Eureka-Client一样</p>
+<p><img src="_v_images/_shezhi_1543200040_17170.png" width="600" hegiht="100"></p>
+<p>主要依赖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-zuul&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="开启zuul的功能"><a href="#开启zuul的功能" class="headerlink" title="开启zuul的功能"></a>开启zuul的功能</h2><p>在项目启动类加上注解@EnableZuulProxy:</p>
+<figure class="highlight plain"><figcaption><span>com.chen.chenservicezuul;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.netflix.eureka.EnableEurekaClient;</span><br><span class="line">import org.springframework.cloud.netflix.zuul.EnableZuulProxy;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableEurekaClient</span><br><span class="line">@EnableZuulProxy</span><br><span class="line">public class ChenServiceZuulApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        </span><br><span class="line">        SpringApplication.run(ChenServiceZuulApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置文件application.properties</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 配置服务器端口</span><br><span class="line">server.port=8950</span><br><span class="line"># spring项目名称</span><br><span class="line">spring.application.name=CHEN-SERVICE-ZUUL</span><br><span class="line"># 注册中心url</span><br><span class="line">eureka.client.service-url.defaultZone=http://localhost:8900/eureka/</span><br><span class="line"># 路由网关</span><br><span class="line"># /api-ribbon/**请求路径的转发给CHEN-SERVICE-RIBBON服务</span><br><span class="line">zuul.routes.api-ribbon.path=/api-ribbon/**</span><br><span class="line">zuul.routes.api-ribbon.serviceId=CHEN-SERVICE-RIBBON</span><br><span class="line"># /api-feign/**请求路径的转发给CHEN-SERVICE-FEIGN服务</span><br><span class="line">zuul.routes.api-feign.path=/api-feign/**</span><br><span class="line">zuul.routes.api-feign.serviceId=CHEN-SERVICE-FEIGN</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>以/api-ribbon/ 开头的请求都转发给CHEN-SERVICE-RIBBON服务</li>
+<li>以/api-feign/开头的请求都转发给CHEN-SERVICE-FEIGN服务</li>
+</ul>
+<p>开启项目：</p>
+<ul>
+<li>Chen-Eureka-Server（注册中心）</li>
+<li>Chen-Eureka-Client（CHEN-EUREKA-CLIENT服务一）</li>
+<li>Chen-Service-Feign（CHEN-SERVICE-FEIGN服务消费者）</li>
+<li>Chen-Service-Ribbon（CHEN-SERVICE-RIBBON服务消费者）</li>
+<li>Chen-Service-Zuul（CHEN-SERVICE-ZUUL路由网关）</li>
+</ul>
+<p><img src="_v_images/_eureka_1543201892_22830.png" width="700" hegiht="300"></p>
+<p>访问 <a href="http://localhost:8950/api-ribbon/C1/hello" target="_blank" rel="noopener">http://localhost:8950/api-ribbon/C1/hello</a><br>请求转发到CHEN-SERVICE-RIBBON服务 </p>
+<p><img src="_v_images/_apiribbon_1543202480_29380.png" width="500" hegiht="100"></p>
+<p>访问 <a href="http://localhost:8950/api-feign/C1/hello" target="_blank" rel="noopener">http://localhost:8950/api-feign/C1/hello</a><br>请求转发到CHEN-SERVICE-FEIGN服务 </p>
+<p><img src="_v_images/_apifeign_1543202702_8886.png" width="500" hegiht="100"></p>
+<p>说明zuul路由网关已经生效</p>
+<h2 id="此时的项目架构"><a href="#此时的项目架构" class="headerlink" title="此时的项目架构"></a>此时的项目架构</h2><p><img src="_v_images/_jiagou_1543202825_11123.png" width="700" hegiht="300"></p>
+<h2 id="服务过滤"><a href="#服务过滤" class="headerlink" title="服务过滤"></a>服务过滤</h2><p>zuul不仅只是路由，并且还能过滤，做一些安全验证。继续改造工程。 新建过滤器<br><figure class="highlight plain"><figcaption><span>com.chen.chenservicezuul.filter;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import com.netflix.zuul.ZuulFilter;</span><br><span class="line">import com.netflix.zuul.context.RequestContext;</span><br><span class="line">import com.netflix.zuul.exception.ZuulException;</span><br><span class="line">import org.springframework.http.HttpStatus;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.Writer;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/26 11:31</span><br><span class="line"> * @Description:自定义过滤器</span><br><span class="line"> */</span><br><span class="line">@Component</span><br><span class="line">public class MyFilter extends ZuulFilter &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:返回一个字符串代表过滤器的类型</span><br><span class="line">     * @param:</span><br><span class="line">     * @return: String</span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/26 11:40</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public String filterType() &#123;</span><br><span class="line">        return &quot;pre&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:过滤的顺序</span><br><span class="line">     * @param: </span><br><span class="line">     * @return: </span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/26 11:41</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public int filterOrder() &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:这里可以写逻辑判断，是否要过滤，本文true,永远过滤。</span><br><span class="line">     * @param: </span><br><span class="line">     * @return: </span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/26 11:41</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public boolean shouldFilter() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:过滤器的具体逻辑。可用很复杂，包括查sql，nosql去判断该请求到底有没有权限访问。</span><br><span class="line">     * @param:</span><br><span class="line">     * @return: </span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/26 11:42</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public Object run() throws ZuulException &#123;</span><br><span class="line">        RequestContext context = RequestContext.getCurrentContext();</span><br><span class="line">        //获取request</span><br><span class="line">        HttpServletRequest request = context.getRequest();</span><br><span class="line">        //获取token</span><br><span class="line">        String token = request.getParameter(&quot;token&quot;);</span><br><span class="line">        if (token==null)&#123;</span><br><span class="line">            context.setSendZuulResponse(false);</span><br><span class="line">            context.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());</span><br><span class="line">            Writer writer=null;</span><br><span class="line">            try &#123;</span><br><span class="line">                //获取输入流</span><br><span class="line">                writer=context.getResponse().getWriter();</span><br><span class="line">                writer.write(&quot;token is Empty&quot;);</span><br><span class="line">            &#125; catch (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;finally &#123;</span><br><span class="line">                if (writer!=null)&#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        writer.close();</span><br><span class="line">                    &#125; catch (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>方法说明：</p>
+<ul>
+<li>filterType：返回一个字符串代表过滤器的类型，在zuul中定义了四种不同生命周期的过滤器类型，具体如下：<br>pre：路由之前<br>routing：路由之时<br>post： 路由之后<br>error：发送错误调用</li>
+<li>filterOrder：过滤的顺序</li>
+<li>shouldFilter：这里可以写逻辑判断，是否要过滤，本文true表示永远过滤</li>
+<li>run：过滤器的具体逻辑。可用很复杂，包括查sql，nosql去判断该请求到底有没有权限访问</li>
+</ul>
+<p>不带token访问：<a href="http://localhost:8950/api-ribbon/C1/hello" target="_blank" rel="noopener">http://localhost:8950/api-ribbon/C1/hello</a></p>
+<p><img src="_v_images/_apiribbon_1543224143_25322.png" width="700" hegiht="300"></p>
+<p>带token访问：<a href="http://localhost:8950/api-feign/C1/hello?token=token" target="_blank" rel="noopener">http://localhost:8950/api-feign/C1/hello?token=token</a></p>
+<p><img src="_v_images/_apifeign_1543224196_12373.png" width="700" hegiht="300"></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="陈广永 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/cgy.github.io/images/timg (2).jpg" alt="陈广永">
+            
+              <p class="site-author-name" itemprop="name">陈广永</p>
+              <p class="site-description motion-element" itemprop="description">挑战自我，不断突破！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/cgy.github.io/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/chenguangyong" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/your-user-name" target="_blank" title="微博">
+                      
+                        <i class="fa fa-fw fa-globe"></i>微博</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://douban.com/people/your-user-name" target="_blank" title="豆瓣">
+                      
+                        <i class="fa fa-fw fa-globe"></i>豆瓣</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#五）路由网关-Zuul"><span class="nav-number">1.</span> <span class="nav-text">(五）路由网关(Zuul)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务架构"><span class="nav-number">1.1.</span> <span class="nav-text">微服务架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zuul简介"><span class="nav-number">1.2.</span> <span class="nav-text">Zuul简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Chen-Service-Zuul项目"><span class="nav-number">1.3.</span> <span class="nav-text">创建Chen-Service-Zuul项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开启zuul的功能"><span class="nav-number">1.4.</span> <span class="nav-text">开启zuul的功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#此时的项目架构"><span class="nav-number">1.5.</span> <span class="nav-text">此时的项目架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务过滤"><span class="nav-number">1.6.</span> <span class="nav-text">服务过滤</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈广永</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/cgy.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/cgy.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

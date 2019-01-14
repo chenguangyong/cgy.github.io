@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/cgy.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/cgy.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/cgy.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/cgy.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/cgy.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/cgy.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/cgy.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="(七）消息总线(Spring Cloud Bus)简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖1234567">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一粒兴陈">
+<meta property="og:url" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/index.html">
+<meta property="og:site_name" content="一粒兴陈">
+<meta property="og:description" content="(七）消息总线(Spring Cloud Bus)简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖1234567">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_eureka_1543472428_22945.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_fangwen_1543472537_5916.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_postreques_1543472952_11899.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_fangwen_1543473081_24604.png">
+<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_jiagou_1543473160_28267.png">
+<meta property="og:updated_time" content="2018-11-29T06:58:00.840Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一粒兴陈">
+<meta name="twitter:description" content="(七）消息总线(Spring Cloud Bus)简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖1234567">
+<meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_eureka_1543472428_22945.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/cgy.github.io/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/">
+
+
+
+
+
+  <title> | 一粒兴陈</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container  page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/cgy.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一粒兴陈</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录学习的每个时刻！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/cgy.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/cgy.github.io/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/cgy.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/cgy.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/cgy.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/cgy.github.io/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/cgy.github.io/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/cgy.github.io/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陈广永">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/cgy.github.io/images/timg (2).jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一粒兴陈">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-14T14:54:20+08:00">
+                2019-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读次数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="七）消息总线-Spring-Cloud-Bus"><a href="#七）消息总线-Spring-Cloud-Bus" class="headerlink" title="(七）消息总线(Spring Cloud Bus)"></a>(七）消息总线(Spring Cloud Bus)</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。<br>本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。</p>
+<h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>你的电脑的提前安装好RabbitMq</p>
+<h2 id="改造Chen-Config-Client项目"><a href="#改造Chen-Config-Client项目" class="headerlink" title="改造Chen-Config-Client项目"></a>改造Chen-Config-Client项目</h2><p>项目pom文件添加依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.retry&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-retry&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-cloud-starter-bus-amqp&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<p>在读取配置文件的类上面添加注解@RefreshScope：</p>
+<figure class="highlight plain"><figcaption><span>com.chen.chenconfigclient.controller;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.beans.factory.annotation.Value;</span><br><span class="line">import org.springframework.cloud.context.config.annotation.RefreshScope;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/27 15:59</span><br><span class="line"> * @Description:演示获取配置文件</span><br><span class="line"> */</span><br><span class="line">@RestController</span><br><span class="line">@RequestMapping(value = &quot;/v1&quot;)</span><br><span class="line">@RefreshScope</span><br><span class="line">public class HelloController &#123;</span><br><span class="line"></span><br><span class="line">    @Value(value = &quot;$&#123;token&#125;&quot;)</span><br><span class="line">    private String token;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * @description: 获取token</span><br><span class="line">     */</span><br><span class="line">    @RequestMapping(value = &quot;/token&quot;)</span><br><span class="line">    public String getToken() &#123;</span><br><span class="line">        return token;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在配置文件bootstrap.properties中加上RabbitMq的配置，包括RabbitMq的地址、端口，用户名、密码，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 不需要验证</span><br><span class="line">management.security.enabled=false</span><br><span class="line"># 配置rabbitmq的主机名</span><br><span class="line">spring.rabbitmq.host=localhost</span><br><span class="line"># 配置rabbitmq的端口</span><br><span class="line">spring.rabbitmq.port=5672</span><br><span class="line"># 配置rabbitmq的用户名</span><br><span class="line">spring.rabbitmq.username=guest</span><br><span class="line"># 配置rabbitmq的密码</span><br><span class="line">spring.rabbitmq.password=guest</span><br></pre></td></tr></table></figure>
+<h2 id="创建Chen-Config-Client-Two项目"><a href="#创建Chen-Config-Client-Two项目" class="headerlink" title="创建Chen-Config-Client-Two项目"></a>创建Chen-Config-Client-Two项目</h2><p>这个项目和Chen-Config-Client基本一模一样，唯一的区别是服务器的端口不同<br>bootstrap.properties中不同的点：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 配置服务器端口</span><br><span class="line">server.port=8980</span><br></pre></td></tr></table></figure></p>
+<h2 id="启动项目："><a href="#启动项目：" class="headerlink" title="启动项目："></a>启动项目：</h2><ul>
+<li>开启RabbitMq服务  </li>
+<li>Chen-Eureka-Server（注册中心）</li>
+<li>Chen-Config-Server（配置服务）</li>
+<li>Chen-Config-Client（读取配置）</li>
+<li>Chen-Config-Client-Two（读取配置</li>
+</ul>
+<p>访问eureka </p>
+<p><img src="_v_images/_eureka_1543472428_22945.png" width="600" hegiht="100"></p>
+<p>此时访问 </p>
+<ul>
+<li>Chen-Config-Client <a href="http://localhost:8970/v1/token" target="_blank" rel="noopener">http://localhost:8970/v1/token</a> </li>
+<li>Chen-Config-Client-Two <a href="http://localhost:8980/v1/token" target="_blank" rel="noopener">http://localhost:8980/v1/token</a></li>
+</ul>
+<p><img src="_v_images/_fangwen_1543472537_5916.png" width="600" hegiht="100"></p>
+<p>修改github仓库中的属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">token=the token change to chen</span><br></pre></td></tr></table></figure></p>
+<p>此时访问 </p>
+<ul>
+<li>Chen-Config-Client <a href="http://localhost:8970/v1/token" target="_blank" rel="noopener">http://localhost:8970/v1/token</a> </li>
+<li><p>Chen-Config-Client-Two <a href="http://localhost:8980/v1/token" target="_blank" rel="noopener">http://localhost:8980/v1/token</a></p>
+<p>没有变化</p>
+</li>
+</ul>
+<p>使用postman 发送如下请求<br>注意：</p>
+<p>使用的是post方法<br>访问的是config client，而不是config server<br>另外，/bus/refresh接口可以指定服务，即使用”destination”参数，比如 “/bus/refresh?destination=customers:**” 即刷新服务名为customers的所有服务，不管ip</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8970/bus/refresh</span><br></pre></td></tr></table></figure>
+<p>等同于<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8970/bus/refresh?destination=CHEN-CONFIG-CLIENT:**</span><br></pre></td></tr></table></figure></p>
+<p><img src="_v_images/_postreques_1543472952_11899.png" width="600" hegiht="100"></p>
+<p>此时再次访问 </p>
+<ul>
+<li>Chen-Config-Client <a href="http://localhost:8970/v1/token" target="_blank" rel="noopener">http://localhost:8970/v1/token</a> </li>
+<li>Chen-Config-Client-Two <a href="http://localhost:8980/v1/token" target="_blank" rel="noopener">http://localhost:8980/v1/token</a></li>
+</ul>
+<p><img src="_v_images/_fangwen_1543473081_24604.png" width="600" hegiht="100"></p>
+<p>此时架构</p>
+<p><img src="_v_images/_jiagou_1543473160_28267.png" width="600" hegiht="100"></p>
+<p>当git文件更改的时候</p>
+<p>通过pc端用post 向端口为8970的CHEN-CONFIG-CLIENT发送请求/bus/refresh</p>
+<p>此时8970端口会发送一个消息</p>
+<p>由消息总线向其他服务传递，从而使整个微服务集群都达到更新配置文件</p>
+<p> <strong>如果出现与文章不一致情况：比如8980的没有刷新到最新的数据，请检查创建的项目是否1.5.x,如果使用2.0以上版本可能出现问题 </strong></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="陈广永 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/cgy.github.io/2019/01/10/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/cgy.github.io/2019/01/14/(三）服务消费者(feign)/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/cgy.github.io/images/timg (2).jpg" alt="陈广永">
+            
+              <p class="site-author-name" itemprop="name">陈广永</p>
+              <p class="site-description motion-element" itemprop="description">挑战自我，不断突破！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/cgy.github.io/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/chenguangyong" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/your-user-name" target="_blank" title="微博">
+                      
+                        <i class="fa fa-fw fa-globe"></i>微博</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://douban.com/people/your-user-name" target="_blank" title="豆瓣">
+                      
+                        <i class="fa fa-fw fa-globe"></i>豆瓣</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#七）消息总线-Spring-Cloud-Bus"><span class="nav-number">1.</span> <span class="nav-text">(七）消息总线(Spring Cloud Bus)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前提"><span class="nav-number">1.2.</span> <span class="nav-text">前提</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改造Chen-Config-Client项目"><span class="nav-number">1.3.</span> <span class="nav-text">改造Chen-Config-Client项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Chen-Config-Client-Two项目"><span class="nav-number">1.4.</span> <span class="nav-text">创建Chen-Config-Client-Two项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动项目："><span class="nav-number">1.5.</span> <span class="nav-text">启动项目：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈广永</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/cgy.github.io/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/cgy.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/cgy.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/cgy.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
