@@ -79,22 +79,22 @@
 
 
 
-<meta name="description" content="(七）消息总线(Spring Cloud Bus)简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖1234567">
+<meta name="description" content="简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖12345678910111213141516171819&amp;lt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一粒兴陈">
+<meta property="og:title" content="(七）消息总线(Spring Cloud Bus)">
 <meta property="og:url" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/index.html">
 <meta property="og:site_name" content="一粒兴陈">
-<meta property="og:description" content="(七）消息总线(Spring Cloud Bus)简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖1234567">
+<meta property="og:description" content="简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖12345678910111213141516171819&amp;lt">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_eureka_1543472428_22945.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_fangwen_1543472537_5916.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_postreques_1543472952_11899.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_fangwen_1543473081_24604.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_jiagou_1543473160_28267.png">
-<meta property="og:updated_time" content="2018-11-29T06:58:00.840Z">
+<meta property="og:updated_time" content="2019-01-14T07:07:43.540Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一粒兴陈">
-<meta name="twitter:description" content="(七）消息总线(Spring Cloud Bus)简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖1234567">
+<meta name="twitter:title" content="(七）消息总线(Spring Cloud Bus)">
+<meta name="twitter:description" content="简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖12345678910111213141516171819&amp;lt">
 <meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_eureka_1543472428_22945.png">
 
 
@@ -131,7 +131,7 @@
 
 
 
-  <title> | 一粒兴陈</title>
+  <title>(七）消息总线(Spring Cloud Bus) | 一粒兴陈</title>
   
 
 
@@ -313,7 +313,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">(七）消息总线(Spring Cloud Bus)</h1>
         
 
         <div class="post-meta">
@@ -368,7 +368,7 @@
       
 
       
-        <h1 id="七）消息总线-Spring-Cloud-Bus"><a href="#七）消息总线-Spring-Cloud-Bus" class="headerlink" title="(七）消息总线(Spring Cloud Bus)"></a>(七）消息总线(Spring Cloud Bus)</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。<br>本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。</p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。<br>本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。</p>
 <h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>你的电脑的提前安装好RabbitMq</p>
 <h2 id="改造Chen-Config-Client项目"><a href="#改造Chen-Config-Client项目" class="headerlink" title="改造Chen-Config-Client项目"></a>改造Chen-Config-Client项目</h2><p>项目pom文件添加依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.retry&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-retry&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-cloud-starter-bus-amqp&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
 <p>在读取配置文件的类上面添加注解@RefreshScope：</p>
@@ -484,8 +484,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/cgy.github.io/2019/01/14/(三）服务消费者(feign)/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
+              <a href="/cgy.github.io/2019/01/14/(三）服务消费者(feign)/" rel="prev" title="(三）服务消费者(feign)">
+                (三）服务消费者(feign) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -630,7 +630,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#七）消息总线-Spring-Cloud-Bus"><span class="nav-number">1.</span> <span class="nav-text">(七）消息总线(Spring Cloud Bus)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前提"><span class="nav-number">1.2.</span> <span class="nav-text">前提</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改造Chen-Config-Client项目"><span class="nav-number">1.3.</span> <span class="nav-text">改造Chen-Config-Client项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Chen-Config-Client-Two项目"><span class="nav-number">1.4.</span> <span class="nav-text">创建Chen-Config-Client-Two项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动项目："><span class="nav-number">1.5.</span> <span class="nav-text">启动项目：</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前提"><span class="nav-number">2.</span> <span class="nav-text">前提</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改造Chen-Config-Client项目"><span class="nav-number">3.</span> <span class="nav-text">改造Chen-Config-Client项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Chen-Config-Client-Two项目"><span class="nav-number">4.</span> <span class="nav-text">创建Chen-Config-Client-Two项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动项目："><span class="nav-number">5.</span> <span class="nav-text">启动项目：</span></a></li></ol></div>
             
 
           </div>

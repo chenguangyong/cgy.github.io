@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="(四）断路器(Hystrix)在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线">
+<meta name="description" content="在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一粒兴陈">
+<meta property="og:title" content="(四）断路器(Hystrix)">
 <meta property="og:url" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/index.html">
 <meta property="og:site_name" content="一粒兴陈">
-<meta property="og:description" content="(四）断路器(Hystrix)在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线">
+<meta property="og:description" content="在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_request_1542957106_31699.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_hystrix1_1542957273_15466.png">
@@ -98,10 +98,10 @@
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_hystrix_1542966899_11671.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen_1542968016_24989.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen_1542968134_27742.png">
-<meta property="og:updated_time" content="2018-11-26T03:09:12.665Z">
+<meta property="og:updated_time" content="2019-01-14T07:09:22.081Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一粒兴陈">
-<meta name="twitter:description" content="(四）断路器(Hystrix)在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线">
+<meta name="twitter:title" content="(四）断路器(Hystrix)">
+<meta name="twitter:description" content="在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫">
 <meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_request_1542957106_31699.png">
 
 
@@ -138,7 +138,7 @@
 
 
 
-  <title> | 一粒兴陈</title>
+  <title>(四）断路器(Hystrix) | 一粒兴陈</title>
   
 
 
@@ -320,7 +320,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">(四）断路器(Hystrix)</h1>
         
 
         <div class="post-meta">
@@ -375,7 +375,7 @@
       
 
       
-        <h1 id="四）断路器-Hystrix"><a href="#四）断路器-Hystrix" class="headerlink" title="(四）断路器(Hystrix)"></a>(四）断路器(Hystrix)</h1><p>在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫痪。服务与服务之间的依赖性，故障会传播，会对整个微服务系统造成灾难性的严重后果，这就是服务故障的“雪崩”效应。</p>
+        <p>在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫痪。服务与服务之间的依赖性，故障会传播，会对整个微服务系统造成灾难性的严重后果，这就是服务故障的“雪崩”效应。</p>
 <p><em>为了解决这个问题，业界提出了断路器模型。</em></p>
 <h2 id="断路器介绍"><a href="#断路器介绍" class="headerlink" title="断路器介绍"></a>断路器介绍</h2><p>Netflix开源了Hystrix组件，实现了断路器模式，SpringCloud对这一组件进行了整合。 在微服务架构中，一个请求需要调用多个服务是非常常见的，如下图：<br><img src="_v_images/_request_1542957106_31699.png" width="700" hegiht="313"></p>
 <p>较底层的服务如果出现故障，会导致连锁故障。当对特定的服务的调用的不可用达到一个阀值（Hystric 是5秒20次） 断路器将会被打开。<br><img src="_v_images/_hystrix1_1542957273_15466.png" width="700" hegiht="313"><br>断路打开后，可用避免连锁故障，fallback方法可以直接返回一个固定值。</p>
@@ -527,8 +527,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/" rel="next" title="(六）分布式配置中心(Spring Cloud Config)">
+                <i class="fa fa-chevron-left"></i> (六）分布式配置中心(Spring Cloud Config)
               </a>
             
           </div>
@@ -679,7 +679,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#四）断路器-Hystrix"><span class="nav-number">1.</span> <span class="nav-text">(四）断路器(Hystrix)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#断路器介绍"><span class="nav-number">1.1.</span> <span class="nav-text">断路器介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Ribbon中使用断路器"><span class="nav-number">1.2.</span> <span class="nav-text">在Ribbon中使用断路器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目启动类"><span class="nav-number">1.2.1.</span> <span class="nav-text">项目启动类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改造HelloServiceImpl类"><span class="nav-number">1.2.2.</span> <span class="nav-text">改造HelloServiceImpl类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动项目："><span class="nav-number">1.2.3.</span> <span class="nav-text">启动项目：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目架构"><span class="nav-number">1.2.4.</span> <span class="nav-text">项目架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Feign中使用断路器"><span class="nav-number">1.3.</span> <span class="nav-text">在Feign中使用断路器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HelloServiceHystrix需要实现HelloService-接口"><span class="nav-number">1.3.1.</span> <span class="nav-text">HelloServiceHystrix需要实现HelloService 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在FeignClient的HelloService接口的注解"><span class="nav-number">1.3.2.</span> <span class="nav-text">在FeignClient的HelloService接口的注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动项目：-1"><span class="nav-number">1.3.3.</span> <span class="nav-text">启动项目：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#断路器：Hystrix-仪表盘-Hystrix-Dashboard"><span class="nav-number">1.4.</span> <span class="nav-text">断路器：Hystrix 仪表盘(Hystrix Dashboard )</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加依赖："><span class="nav-number">1.4.1.</span> <span class="nav-text">添加依赖：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在主程序启动类中加入-EnableHystrixDashboard注解，"><span class="nav-number">1.4.2.</span> <span class="nav-text">在主程序启动类中加入@EnableHystrixDashboard注解，</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动项目：-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">启动项目：</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#断路器介绍"><span class="nav-number">1.</span> <span class="nav-text">断路器介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Ribbon中使用断路器"><span class="nav-number">2.</span> <span class="nav-text">在Ribbon中使用断路器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目启动类"><span class="nav-number">2.1.</span> <span class="nav-text">项目启动类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改造HelloServiceImpl类"><span class="nav-number">2.2.</span> <span class="nav-text">改造HelloServiceImpl类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动项目："><span class="nav-number">2.3.</span> <span class="nav-text">启动项目：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目架构"><span class="nav-number">2.4.</span> <span class="nav-text">项目架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Feign中使用断路器"><span class="nav-number">3.</span> <span class="nav-text">在Feign中使用断路器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HelloServiceHystrix需要实现HelloService-接口"><span class="nav-number">3.1.</span> <span class="nav-text">HelloServiceHystrix需要实现HelloService 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在FeignClient的HelloService接口的注解"><span class="nav-number">3.2.</span> <span class="nav-text">在FeignClient的HelloService接口的注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动项目：-1"><span class="nav-number">3.3.</span> <span class="nav-text">启动项目：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#断路器：Hystrix-仪表盘-Hystrix-Dashboard"><span class="nav-number">4.</span> <span class="nav-text">断路器：Hystrix 仪表盘(Hystrix Dashboard )</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加依赖："><span class="nav-number">4.1.</span> <span class="nav-text">添加依赖：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在主程序启动类中加入-EnableHystrixDashboard注解，"><span class="nav-number">4.2.</span> <span class="nav-text">在主程序启动类中加入@EnableHystrixDashboard注解，</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动项目：-2"><span class="nav-number">4.3.</span> <span class="nav-text">启动项目：</span></a></li></ol></li></ol></div>
             
 
           </div>

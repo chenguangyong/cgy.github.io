@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="(五）路由网关(Zuul)微服务架构在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。 一个简单的微服务系统如下图：  在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再">
+<meta name="description" content="微服务架构在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。 一个简单的微服务系统如下图：  在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再到具体的服。，服务统一注册">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一粒兴陈">
+<meta property="og:title" content="(五）路由网关(Zuul)">
 <meta property="og:url" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/index.html">
 <meta property="og:site_name" content="一粒兴陈">
-<meta property="og:description" content="(五）路由网关(Zuul)微服务架构在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。 一个简单的微服务系统如下图：  在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再">
+<meta property="og:description" content="微服务架构在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。 一个简单的微服务系统如下图：  在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再到具体的服。，服务统一注册">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_weifuwujia_1543199148_7870.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_shezhi_1543200040_17170.png">
@@ -94,10 +94,10 @@
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_jiagou_1543202825_11123.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_apiribbon_1543224143_25322.png">
 <meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_apifeign_1543224196_12373.png">
-<meta property="og:updated_time" content="2018-11-26T09:23:38.619Z">
+<meta property="og:updated_time" content="2019-01-14T07:09:53.674Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一粒兴陈">
-<meta name="twitter:description" content="(五）路由网关(Zuul)微服务架构在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。 一个简单的微服务系统如下图：  在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再">
+<meta name="twitter:title" content="(五）路由网关(Zuul)">
+<meta name="twitter:description" content="微服务架构在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。 一个简单的微服务系统如下图：  在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再到具体的服。，服务统一注册">
 <meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(五）路由网关(Zuul)/_v_images/_weifuwujia_1543199148_7870.png">
 
 
@@ -134,7 +134,7 @@
 
 
 
-  <title> | 一粒兴陈</title>
+  <title>(五）路由网关(Zuul) | 一粒兴陈</title>
   
 
 
@@ -316,7 +316,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">(五）路由网关(Zuul)</h1>
         
 
         <div class="post-meta">
@@ -371,7 +371,7 @@
       
 
       
-        <h1 id="五）路由网关-Zuul"><a href="#五）路由网关-Zuul" class="headerlink" title="(五）路由网关(Zuul)"></a>(五）路由网关(Zuul)</h1><h2 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h2><p>在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。</p>
+        <h2 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h2><p>在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。</p>
 <p>一个简单的微服务系统如下图：</p>
 <p><img src="_v_images/_weifuwujia_1543199148_7870.png" width="600" hegiht="100"></p>
 <p>在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再到具体的服。，服务统一注册到高可用的服务注册中心集群，服务的所有的配置文件由配置服务管理（下一篇文章讲述），配置服务的配置文件放在git仓库，方便开发人员随时改配置。</p>
@@ -472,8 +472,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/" rel="next" title="(二）服务消费者（ribbon+restTemplate)">
+                <i class="fa fa-chevron-left"></i> (二）服务消费者（ribbon+restTemplate)
               </a>
             
           </div>
@@ -482,8 +482,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
+              <a href="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/" rel="prev" title="(六）分布式配置中心(Spring Cloud Config)">
+                (六）分布式配置中心(Spring Cloud Config) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -628,7 +628,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#五）路由网关-Zuul"><span class="nav-number">1.</span> <span class="nav-text">(五）路由网关(Zuul)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务架构"><span class="nav-number">1.1.</span> <span class="nav-text">微服务架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zuul简介"><span class="nav-number">1.2.</span> <span class="nav-text">Zuul简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Chen-Service-Zuul项目"><span class="nav-number">1.3.</span> <span class="nav-text">创建Chen-Service-Zuul项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开启zuul的功能"><span class="nav-number">1.4.</span> <span class="nav-text">开启zuul的功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#此时的项目架构"><span class="nav-number">1.5.</span> <span class="nav-text">此时的项目架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务过滤"><span class="nav-number">1.6.</span> <span class="nav-text">服务过滤</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务架构"><span class="nav-number">1.</span> <span class="nav-text">微服务架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zuul简介"><span class="nav-number">2.</span> <span class="nav-text">Zuul简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Chen-Service-Zuul项目"><span class="nav-number">3.</span> <span class="nav-text">创建Chen-Service-Zuul项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开启zuul的功能"><span class="nav-number">4.</span> <span class="nav-text">开启zuul的功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#此时的项目架构"><span class="nav-number">5.</span> <span class="nav-text">此时的项目架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务过滤"><span class="nav-number">6.</span> <span class="nav-text">服务过滤</span></a></li></ol></div>
             
 
           </div>
