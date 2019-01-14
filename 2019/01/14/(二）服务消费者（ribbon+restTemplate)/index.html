@@ -86,17 +86,17 @@
 <meta property="og:site_name" content="一粒兴陈">
 <meta property="og:description" content="介绍在微服务架构中，业务都会被拆分成一个独立的服务，服务与服务的通讯是基于http restful的。Spring cloud有两种服务调用方式：  一种是ribbon+restTemplate 一种是feign这里先学习ribbon+restTemplateRibbonribbon是一个负载均衡客户端，可以很好的控制htt和tcp的一些行为。Feign默认集成了ribbon。准备工作创建一个CH">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_v_images/_浏览器访问serve_1542880320_14070.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_v_images/_ribbon_1542940384_11380.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_v_images/_service_1542943643_16686.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_v_images/_8910_1542943794_13114.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_v_images/_8920_1542943830_23810.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_v_images/_架构_1542944988_6742.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_浏览器访问serve_1542880320_14070.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_ribbon_1542940384_11380.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_service_1542943643_16686.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_8910_1542943794_13114.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_8920_1542943830_23810.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_架构_1542944988_6742.png">
 <meta property="og:updated_time" content="2019-01-14T07:09:59.150Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="(二）服务消费者（ribbon+restTemplate)">
 <meta name="twitter:description" content="介绍在微服务架构中，业务都会被拆分成一个独立的服务，服务与服务的通讯是基于http restful的。Spring cloud有两种服务调用方式：  一种是ribbon+restTemplate 一种是feign这里先学习ribbon+restTemplateRibbonribbon是一个负载均衡客户端，可以很好的控制htt和tcp的一些行为。Feign默认集成了ribbon。准备工作创建一个CH">
-<meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_v_images/_浏览器访问serve_1542880320_14070.png">
+<meta name="twitter:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_浏览器访问serve_1542880320_14070.png">
 
 
 
@@ -380,12 +380,12 @@
 <li>Chen-Eureka-Client（CHEN-EUREKA-CLIENT服务一）</li>
 <li>Chen-Eureka-Client-Two（CHEN-EUREKA-CLIENT-TWO服务二）</li>
 </ul>
-<p><img src="_v_images/_浏览器访问serve_1542880320_14070.png" width="700" hegiht="313" align="center"></p>
+<p><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_浏览器访问serve_1542880320_14070.png" width="700" hegiht="313" align="center"></p>
 <h2 id="创建服务消费者"><a href="#创建服务消费者" class="headerlink" title="创建服务消费者"></a>创建服务消费者</h2><ul>
 <li>新创建一个项目Chen-Service-Ribbon，和Chen-Eureka-Client类似</li>
 <li>右键，New&gt;&gt;Module&gt;&gt;Spring Init&gt;&gt;填写项目maven信息&gt;&gt;选择依赖&gt;&gt;填写项目名称</li>
 </ul>
-<p><img src="_v_images/_ribbon_1542940384_11380.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_ribbon_1542940384_11380.png" width="700" hegiht="313"></p>
 <p>主要包含这三个依赖</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- web --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- eureka discovery --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- ribbon --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-ribbon&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
 <h2 id="项目启动类"><a href="#项目启动类" class="headerlink" title="项目启动类"></a>项目启动类</h2><p>通过@EnableDiscoveryClient向服务中心注册<br>并且向程序的ioc注入一个bean: restTemplate;并通过@LoadBalanced注解表明这个restRemplate开启负载均衡的功能</p>
@@ -398,8 +398,8 @@
 <p>控制层HelloController</p>
 <figure class="highlight plain"><figcaption><span>com.chen.chenserviceribbon.controller;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import com.chen.chenserviceribbon.servcie.HelloService;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/23 11:09</span><br><span class="line"> * @Description:</span><br><span class="line"> */</span><br><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/C1&quot;)</span><br><span class="line">public class HelloController &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private HelloService helloService;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:</span><br><span class="line">     * @param: 模拟调用</span><br><span class="line">     * @return:</span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/23 11:12</span><br><span class="line">     */</span><br><span class="line">    @RequestMapping(&quot;/hello&quot;)</span><br><span class="line">    public String hello() &#123;</span><br><span class="line">        return helloService.showPort();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>访问页面</p>
-<p><img src="_v_images/_service_1542943643_16686.png" width="700" hegiht="313" align="center"><br><img src="_v_images/_8910_1542943794_13114.png" width="700" hegiht="313" align="center"><br><img src="_v_images/_8920_1542943830_23810.png" width="700" hegiht="313" align="center"></p>
-<p>这说明当我们通过调用restTemplate.getForObject(“<a href="http://CHEN-EUREKA-CLIENT/C1/showPort“" target="_blank" rel="noopener">http://CHEN-EUREKA-CLIENT/C1/showPort“</a>, String.class);方法时，已经做了负载均衡，访问了不同的端口的服务实例。<br><img src="_v_images/_架构_1542944988_6742.png" width="700" hegiht="313" align="center"></p>
+<p><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_service_1542943643_16686.png" width="700" hegiht="313" align="center"><br><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_8910_1542943794_13114.png" width="700" hegiht="313" align="center"><br><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_8920_1542943830_23810.png" width="700" hegiht="313" align="center"></p>
+<p>这说明当我们通过调用restTemplate.getForObject(“<a href="http://CHEN-EUREKA-CLIENT/C1/showPort“" target="_blank" rel="noopener">http://CHEN-EUREKA-CLIENT/C1/showPort“</a>, String.class);方法时，已经做了负载均衡，访问了不同的端口的服务实例。<br><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_架构_1542944988_6742.png" width="700" hegiht="313" align="center"></p>
 <ul>
 <li>一个服务注册中心，Eureka Server,端口为8900</li>
 <li>AHUT-EUREKA-CLIENT工程跑了两个实例，端口分别为8910,8920，分别向服务注册中心注册</li>

@@ -86,19 +86,19 @@
 <meta property="og:site_name" content="一粒兴陈">
 <meta property="og:description" content="Spring Cloud Config简介在分布式系统中，由于服务数量巨多，为了方便服务配置文件统一管理，实时更新，所以需要分布式配置中心组件。 在Spring Cloud中，有分布式配置中心组件spring cloud config ，它支持配置服务放在配置服务的内存中（即本地），也支持放在远程Git仓库中。 在spring cloud config 组件中，分两个角色，  一是config s">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_v_images/_configserv_1543301704_17645.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_v_images/_fangwen_1543304161_21113.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_v_images/_configclie_1543304466_1900.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_v_images/_log_1543306595_8558.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_v_images/_eureka_1543306718_21464.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_v_images/_fangwen_1543306806_4068.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_v_images/_jiagou_1543306958_14551.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_v_images/_gaokeyong_1543307084_25070.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_configserv_1543301704_17645.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_fangwen_1543304161_21113.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_configclie_1543304466_1900.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_log_1543306595_8558.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_eureka_1543306718_21464.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_fangwen_1543306806_4068.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_jiagou_1543306958_14551.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_gaokeyong_1543307084_25070.png">
 <meta property="og:updated_time" content="2019-01-14T07:07:01.488Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="(六）分布式配置中心(Spring Cloud Config)">
 <meta name="twitter:description" content="Spring Cloud Config简介在分布式系统中，由于服务数量巨多，为了方便服务配置文件统一管理，实时更新，所以需要分布式配置中心组件。 在Spring Cloud中，有分布式配置中心组件spring cloud config ，它支持配置服务放在配置服务的内存中（即本地），也支持放在远程Git仓库中。 在spring cloud config 组件中，分两个角色，  一是config s">
-<meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_v_images/_configserv_1543301704_17645.png">
+<meta name="twitter:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring%20Cloud%20Config)/_configserv_1543301704_17645.png">
 
 
 
@@ -378,7 +378,7 @@
 <li>一是config server</li>
 <li>二是config client<h2 id="创建Chen-Config-Server项目"><a href="#创建Chen-Config-Server项目" class="headerlink" title="创建Chen-Config-Server项目"></a>创建Chen-Config-Server项目</h2>新创建一个工程Chen-Config-Server，创建过程和Chen-Eureka-Client一样</li>
 </ul>
-<p><img src="_v_images/_configserv_1543301704_17645.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_configserv_1543301704_17645.png" width="600" hegiht="100"></p>
 <p>主要依赖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-config-server&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
 <h3 id="开启配置服务器的功能"><a href="#开启配置服务器的功能" class="headerlink" title="开启配置服务器的功能"></a>开启配置服务器的功能</h3><p>在程序的入口Application类加上@EnableConfigServer注解，代码如下：<br><figure class="highlight plain"><figcaption><span>com.chen.chenconfigserver;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.config.server.EnableConfigServer;</span><br><span class="line">import org.springframework.cloud.netflix.eureka.EnableEurekaClient;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableEurekaClient</span><br><span class="line">@EnableConfigServer</span><br><span class="line">public class ChenConfigServerApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        SpringApplication.run(ChenConfigServerApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>配置文件：</p>
@@ -393,9 +393,9 @@
 </li>
 </ul>
 <p>启动程序：访问<a href="http://localhost:8960/foo/dev" target="_blank" rel="noopener">http://localhost:8960/foo/dev</a></p>
-<p><img src="_v_images/_fangwen_1543304161_21113.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_fangwen_1543304161_21113.png" width="600" hegiht="100"></p>
 <p>以上可以证明配置服务中心可以从远程程序获取配置信息。</p>
-<h2 id="创建Chen-Config-Client项目"><a href="#创建Chen-Config-Client项目" class="headerlink" title="创建Chen-Config-Client项目"></a>创建Chen-Config-Client项目</h2><p><img src="_v_images/_configclie_1543304466_1900.png" width="600" hegiht="100"></p>
+<h2 id="创建Chen-Config-Client项目"><a href="#创建Chen-Config-Client项目" class="headerlink" title="创建Chen-Config-Client项目"></a>创建Chen-Config-Client项目</h2><p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_configclie_1543304466_1900.png" width="600" hegiht="100"></p>
 <p>主要依赖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-config&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
 <h3 id="开启配置服务器的功能-1"><a href="#开启配置服务器的功能-1" class="headerlink" title="开启配置服务器的功能"></a>开启配置服务器的功能</h3><p>程序启动类：<br><figure class="highlight plain"><figcaption><span>com.chen.chenconfigclient;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">public class ChenConfigClientApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        </span><br><span class="line">        SpringApplication.run(ChenConfigClientApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>注意：</p>
@@ -438,14 +438,14 @@
 <li>Chen-Config-Server（配置服务）</li>
 <li>Chen-Config-Client（读取配置）<br>启动Chen-Config-Client项目出现如下日志：</li>
 </ul>
-<p><img src="_v_images/_log_1543306595_8558.png" width="600" hegiht="100"></p>
-<h3 id="访问eureka"><a href="#访问eureka" class="headerlink" title="访问eureka"></a>访问eureka</h3><p><img src="_v_images/_eureka_1543306718_21464.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_log_1543306595_8558.png" width="600" hegiht="100"></p>
+<h3 id="访问eureka"><a href="#访问eureka" class="headerlink" title="访问eureka"></a>访问eureka</h3><p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_eureka_1543306718_21464.png" width="600" hegiht="100"></p>
 <h3 id="浏览器访问Chen-Config-Client"><a href="#浏览器访问Chen-Config-Client" class="headerlink" title="浏览器访问Chen-Config-Client"></a>浏览器访问Chen-Config-Client</h3><p><a href="http://localhost:8970/v1/token" target="_blank" rel="noopener">http://localhost:8970/v1/token</a></p>
-<p><img src="_v_images/_fangwen_1543306806_4068.png" width="600" hegiht="100"></p>
-<h3 id="此时的架构"><a href="#此时的架构" class="headerlink" title="此时的架构"></a>此时的架构</h3><p><img src="_v_images/_jiagou_1543306958_14551.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_fangwen_1543306806_4068.png" width="600" hegiht="100"></p>
+<h3 id="此时的架构"><a href="#此时的架构" class="headerlink" title="此时的架构"></a>此时的架构</h3><p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_jiagou_1543306958_14551.png" width="600" hegiht="100"></p>
 <p>高可用分布式配置中心</p>
 <p>上面讲解一个服务如何从配置中心读取文件，配置中心如何从远程git读取配置文件。<br>当服务实例很多时，都从配置中心读取文件，这时可以考虑将配置中心做成一个微服务，将其集群化，从而达到高可用，架构图如下：</p>
-<p><img src="_v_images/_gaokeyong_1543307084_25070.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_gaokeyong_1543307084_25070.png" width="600" hegiht="100"></p>
 
       
     </div>

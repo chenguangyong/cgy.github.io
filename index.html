@@ -363,8 +363,8 @@
           
             <p>在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫痪。服务与服务之间的依赖性，故障会传播，会对整个微服务系统造成灾难性的严重后果，这就是服务故障的“雪崩”效应。</p>
 <p><em>为了解决这个问题，业界提出了断路器模型。</em></p>
-<h2 id="断路器介绍"><a href="#断路器介绍" class="headerlink" title="断路器介绍"></a>断路器介绍</h2><p>Netflix开源了Hystrix组件，实现了断路器模式，SpringCloud对这一组件进行了整合。 在微服务架构中，一个请求需要调用多个服务是非常常见的，如下图：<br><img src="_v_images/_request_1542957106_31699.png" width="700" hegiht="313"></p>
-<p>较底层的服务如果出现故障，会导致连锁故障。当对特定的服务的调用的不可用达到一个阀值（Hystric 是5秒20次） 断路器将会被打开。<br><img src="_v_images/_hystrix1_1542957273_15466.png" width="700" hegiht="313"><br>断路打开后，可用避免连锁故障，fallback方法可以直接返回一个固定值。</p>
+<h2 id="断路器介绍"><a href="#断路器介绍" class="headerlink" title="断路器介绍"></a>断路器介绍</h2><p>Netflix开源了Hystrix组件，实现了断路器模式，SpringCloud对这一组件进行了整合。 在微服务架构中，一个请求需要调用多个服务是非常常见的，如下图：<br><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_request_1542957106_31699.png" width="700" hegiht="313"></p>
+<p>较底层的服务如果出现故障，会导致连锁故障。当对特定的服务的调用的不可用达到一个阀值（Hystric 是5秒20次） 断路器将会被打开。<br><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_hystrix1_1542957273_15466.png" width="700" hegiht="313"><br>断路打开后，可用避免连锁故障，fallback方法可以直接返回一个固定值。</p>
 <h2 id="在Ribbon中使用断路器"><a href="#在Ribbon中使用断路器" class="headerlink" title="在Ribbon中使用断路器"></a>在Ribbon中使用断路器</h2><p>改造之前的Chen-Service-Ribbon项目</p>
 <p>pom.xml文件中添加hystrix的依赖</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;!-- 使用@HystrixCommand 必须引入--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">     &lt;groupId&gt;com.netflix.hystrix&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;hystrix-javanica&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
@@ -377,13 +377,13 @@
 <li>Chen-Eureka-Client（CHEN-EUREKA-CLIENT服务一）</li>
 <li>Chen-Service-Ribbon（CHEN-SERVICE-RIBBON服务消费者）</li>
 </ul>
-<p><img src="_v_images/_service_1542961880_976.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_service_1542961880_976.png" width="700" hegiht="313"></p>
 <p>访问Ahut-Service-Ribbon <a href="http://localhost:8930/C1/hello" target="_blank" rel="noopener">http://localhost:8930/C1/hello</a> </p>
-<p><img src="_v_images/_fangwen_1542962032_5519.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen_1542962032_5519.png" width="700" hegiht="313"></p>
 <p>此时，关闭Chen-Eureka-Client服务，再次访问Chen-Service-Ribbon<br><a href="http://localhost:8930/C1/hello" target="_blank" rel="noopener">http://localhost:8930/C1/hello</a></p>
-<p><img src="_v_images/_fangwen1_1542962165_24108.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen1_1542962165_24108.png" width="700" hegiht="313"></p>
 <p>这就说明当 Chen-Eureka-Client 工程不可用的时候，Chen-Service-Ribbon调用 Chen-Eureka-Client的API接口时，会执行快速失败，直接返回一组字符串，而不是等待响应超时，这很好的控制了容器的线程阻塞</p>
-<h3 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h3><p><img src="_v_images/_jiagou_1542962312_10677.png" width="700" hegiht="313"></p>
+<h3 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h3><p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_jiagou_1542962312_10677.png" width="700" hegiht="313"></p>
 <h2 id="在Feign中使用断路器"><a href="#在Feign中使用断路器" class="headerlink" title="在Feign中使用断路器"></a>在Feign中使用断路器</h2><p>Feign是自带断路器的，在D版本的Spring Cloud中，它没有默认打开。需要在配置文件中配置打开它。</p>
 <ul>
 <li>改造之前的Chen-Service-Feign项目</li>
@@ -404,7 +404,7 @@
 <li>3.此时关闭Chen-Eureka-Client-One项目，再次访问Chen-Service-Feign项目 <a href="http://localhost:8940/C1/hello：" target="_blank" rel="noopener">http://localhost:8940/C1/hello：</a> </li>
 </ul>
 <p>可以看到断路器起作用（不再截图）</p>
-<p><img src="_v_images/_jiagou_1542963349_14894.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_jiagou_1542963349_14894.png" width="700" hegiht="313"></p>
 <h2 id="断路器：Hystrix-仪表盘-Hystrix-Dashboard"><a href="#断路器：Hystrix-仪表盘-Hystrix-Dashboard" class="headerlink" title="断路器：Hystrix 仪表盘(Hystrix Dashboard )"></a>断路器：Hystrix 仪表盘(Hystrix Dashboard )</h2><p>改造Chen-Service-Ribbon项目，Chen-Service-Feign项目的改造和这个一样</p>
 <ul>
 <li>使用过程不要随便更换依赖镜像否则会报错</li>
@@ -426,35 +426,35 @@
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_eurka_1542966512_26528.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_eurka_1542966512_26528.png" width="700" hegiht="313"></p>
 <ul>
 <li><ol start="2">
 <li>访问hystrix仪表盘 <a href="http://localhost:8930/hystrix" target="_blank" rel="noopener">http://localhost:8930/hystrix</a> </li>
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_hystrix_1542966659_32128.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_hystrix_1542966659_32128.png" width="700" hegiht="313"></p>
 <ul>
 <li><ol start="3">
 <li>修改以下部分：<br>复制浏览器的地址栏，粘贴到输入框，并且加上.stream<br>自定义一个Title<br>修改完后，点击monitor stream，进入下一个页面</li>
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_hystrix_1542966899_11671.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_hystrix_1542966899_11671.png" width="700" hegiht="313"></p>
 <ul>
 <li><ol start="4">
 <li>中间访问一下  Chen-Service-Ribbon项目 <a href="http://localhost:8930/C1/hello" target="_blank" rel="noopener">http://localhost:8930/C1/hello</a> </li>
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_fangwen_1542968016_24989.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen_1542968016_24989.png" width="700" hegiht="313"></p>
 <ul>
 <li><ol start="5">
 <li>刷新下刚才进入的监控界面</li>
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_fangwen_1542968134_27742.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen_1542968134_27742.png" width="700" hegiht="313"></p>
 <p>如果出现问题：不能监控，参考<br><a href="https://www.cnblogs.com/mark7/p/8920288.html" target="_blank" rel="noopener">https://www.cnblogs.com/mark7/p/8920288.html</a></p>
 
           
@@ -584,7 +584,7 @@
 <li>一是config server</li>
 <li>二是config client<h2 id="创建Chen-Config-Server项目"><a href="#创建Chen-Config-Server项目" class="headerlink" title="创建Chen-Config-Server项目"></a>创建Chen-Config-Server项目</h2>新创建一个工程Chen-Config-Server，创建过程和Chen-Eureka-Client一样</li>
 </ul>
-<p><img src="_v_images/_configserv_1543301704_17645.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_configserv_1543301704_17645.png" width="600" hegiht="100"></p>
 <p>主要依赖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-config-server&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
 <h3 id="开启配置服务器的功能"><a href="#开启配置服务器的功能" class="headerlink" title="开启配置服务器的功能"></a>开启配置服务器的功能</h3><p>在程序的入口Application类加上@EnableConfigServer注解，代码如下：<br><figure class="highlight plain"><figcaption><span>com.chen.chenconfigserver;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.config.server.EnableConfigServer;</span><br><span class="line">import org.springframework.cloud.netflix.eureka.EnableEurekaClient;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableEurekaClient</span><br><span class="line">@EnableConfigServer</span><br><span class="line">public class ChenConfigServerApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        SpringApplication.run(ChenConfigServerApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>配置文件：</p>
@@ -599,9 +599,9 @@
 </li>
 </ul>
 <p>启动程序：访问<a href="http://localhost:8960/foo/dev" target="_blank" rel="noopener">http://localhost:8960/foo/dev</a></p>
-<p><img src="_v_images/_fangwen_1543304161_21113.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_fangwen_1543304161_21113.png" width="600" hegiht="100"></p>
 <p>以上可以证明配置服务中心可以从远程程序获取配置信息。</p>
-<h2 id="创建Chen-Config-Client项目"><a href="#创建Chen-Config-Client项目" class="headerlink" title="创建Chen-Config-Client项目"></a>创建Chen-Config-Client项目</h2><p><img src="_v_images/_configclie_1543304466_1900.png" width="600" hegiht="100"></p>
+<h2 id="创建Chen-Config-Client项目"><a href="#创建Chen-Config-Client项目" class="headerlink" title="创建Chen-Config-Client项目"></a>创建Chen-Config-Client项目</h2><p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_configclie_1543304466_1900.png" width="600" hegiht="100"></p>
 <p>主要依赖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-config&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
 <h3 id="开启配置服务器的功能-1"><a href="#开启配置服务器的功能-1" class="headerlink" title="开启配置服务器的功能"></a>开启配置服务器的功能</h3><p>程序启动类：<br><figure class="highlight plain"><figcaption><span>com.chen.chenconfigclient;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">public class ChenConfigClientApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        </span><br><span class="line">        SpringApplication.run(ChenConfigClientApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>注意：</p>
@@ -644,14 +644,14 @@
 <li>Chen-Config-Server（配置服务）</li>
 <li>Chen-Config-Client（读取配置）<br>启动Chen-Config-Client项目出现如下日志：</li>
 </ul>
-<p><img src="_v_images/_log_1543306595_8558.png" width="600" hegiht="100"></p>
-<h3 id="访问eureka"><a href="#访问eureka" class="headerlink" title="访问eureka"></a>访问eureka</h3><p><img src="_v_images/_eureka_1543306718_21464.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_log_1543306595_8558.png" width="600" hegiht="100"></p>
+<h3 id="访问eureka"><a href="#访问eureka" class="headerlink" title="访问eureka"></a>访问eureka</h3><p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_eureka_1543306718_21464.png" width="600" hegiht="100"></p>
 <h3 id="浏览器访问Chen-Config-Client"><a href="#浏览器访问Chen-Config-Client" class="headerlink" title="浏览器访问Chen-Config-Client"></a>浏览器访问Chen-Config-Client</h3><p><a href="http://localhost:8970/v1/token" target="_blank" rel="noopener">http://localhost:8970/v1/token</a></p>
-<p><img src="_v_images/_fangwen_1543306806_4068.png" width="600" hegiht="100"></p>
-<h3 id="此时的架构"><a href="#此时的架构" class="headerlink" title="此时的架构"></a>此时的架构</h3><p><img src="_v_images/_jiagou_1543306958_14551.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_fangwen_1543306806_4068.png" width="600" hegiht="100"></p>
+<h3 id="此时的架构"><a href="#此时的架构" class="headerlink" title="此时的架构"></a>此时的架构</h3><p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_jiagou_1543306958_14551.png" width="600" hegiht="100"></p>
 <p>高可用分布式配置中心</p>
 <p>上面讲解一个服务如何从配置中心读取文件，配置中心如何从远程git读取配置文件。<br>当服务实例很多时，都从配置中心读取文件，这时可以考虑将配置中心做成一个微服务，将其集群化，从而达到高可用，架构图如下：</p>
-<p><img src="_v_images/_gaokeyong_1543307084_25070.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(六）分布式配置中心(Spring Cloud Config)/_gaokeyong_1543307084_25070.png" width="600" hegiht="100"></p>
 
           
         
@@ -775,11 +775,11 @@
           
             <h2 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h2><p>在微服务架构中，需要几个基础的服务治理组件，包括服务注册与发现、服务消费、负载均衡、断路器、智能路由、配置管理等，由这几个基础组件相互协作，共同组建了一个简单的微服务系统。</p>
 <p>一个简单的微服务系统如下图：</p>
-<p><img src="_v_images/_weifuwujia_1543199148_7870.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(五）路由网关(Zuul)/_weifuwujia_1543199148_7870.png" width="600" hegiht="100"></p>
 <p>在Spring Cloud微服务系统中，一种常见的负载均衡方式是，客户端的请求首先经过负载均衡（zuul、Ngnix），再到达服务网关（zuul集群），然后再到具体的服。，服务统一注册到高可用的服务注册中心集群，服务的所有的配置文件由配置服务管理（下一篇文章讲述），配置服务的配置文件放在git仓库，方便开发人员随时改配置。</p>
 <h2 id="Zuul简介"><a href="#Zuul简介" class="headerlink" title="Zuul简介"></a>Zuul简介</h2><p>Zuul的主要功能是路由转发和过滤器。路由功能是微服务的一部分，比如／api/user转发到到user服务，/api/shop转发到到shop服务。zuul默认和Ribbon结合实现了负载均衡的功能。</p>
 <h2 id="创建Chen-Service-Zuul项目"><a href="#创建Chen-Service-Zuul项目" class="headerlink" title="创建Chen-Service-Zuul项目"></a>创建Chen-Service-Zuul项目</h2><p>新创建一个工程Chen-Service-Zuul，创建过程和Chen-Eureka-Client一样</p>
-<p><img src="_v_images/_shezhi_1543200040_17170.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(五）路由网关(Zuul)/_shezhi_1543200040_17170.png" width="600" hegiht="100"></p>
 <p>主要依赖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-zuul&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
 <h2 id="开启zuul的功能"><a href="#开启zuul的功能" class="headerlink" title="开启zuul的功能"></a>开启zuul的功能</h2><p>在项目启动类加上注解@EnableZuulProxy:</p>
 <figure class="highlight plain"><figcaption><span>com.chen.chenservicezuul;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.netflix.eureka.EnableEurekaClient;</span><br><span class="line">import org.springframework.cloud.netflix.zuul.EnableZuulProxy;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableEurekaClient</span><br><span class="line">@EnableZuulProxy</span><br><span class="line">public class ChenServiceZuulApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        </span><br><span class="line">        SpringApplication.run(ChenServiceZuulApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -798,13 +798,13 @@
 <li>Chen-Service-Ribbon（CHEN-SERVICE-RIBBON服务消费者）</li>
 <li>Chen-Service-Zuul（CHEN-SERVICE-ZUUL路由网关）</li>
 </ul>
-<p><img src="_v_images/_eureka_1543201892_22830.png" width="700" hegiht="300"></p>
+<p><img src="/cgy.github.io/2019/01/14/(五）路由网关(Zuul)/_eureka_1543201892_22830.png" width="700" hegiht="300"></p>
 <p>访问 <a href="http://localhost:8950/api-ribbon/C1/hello" target="_blank" rel="noopener">http://localhost:8950/api-ribbon/C1/hello</a><br>请求转发到CHEN-SERVICE-RIBBON服务 </p>
-<p><img src="_v_images/_apiribbon_1543202480_29380.png" width="500" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(五）路由网关(Zuul)/_apiribbon_1543202480_29380.png" width="500" hegiht="100"></p>
 <p>访问 <a href="http://localhost:8950/api-feign/C1/hello" target="_blank" rel="noopener">http://localhost:8950/api-feign/C1/hello</a><br>请求转发到CHEN-SERVICE-FEIGN服务 </p>
-<p><img src="_v_images/_apifeign_1543202702_8886.png" width="500" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(五）路由网关(Zuul)/_apifeign_1543202702_8886.png" width="500" hegiht="100"></p>
 <p>说明zuul路由网关已经生效</p>
-<h2 id="此时的项目架构"><a href="#此时的项目架构" class="headerlink" title="此时的项目架构"></a>此时的项目架构</h2><p><img src="_v_images/_jiagou_1543202825_11123.png" width="700" hegiht="300"></p>
+<h2 id="此时的项目架构"><a href="#此时的项目架构" class="headerlink" title="此时的项目架构"></a>此时的项目架构</h2><p><img src="/cgy.github.io/2019/01/14/(五）路由网关(Zuul)/_jiagou_1543202825_11123.png" width="700" hegiht="300"></p>
 <h2 id="服务过滤"><a href="#服务过滤" class="headerlink" title="服务过滤"></a>服务过滤</h2><p>zuul不仅只是路由，并且还能过滤，做一些安全验证。继续改造工程。 新建过滤器<br><figure class="highlight plain"><figcaption><span>com.chen.chenservicezuul.filter;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import com.netflix.zuul.ZuulFilter;</span><br><span class="line">import com.netflix.zuul.context.RequestContext;</span><br><span class="line">import com.netflix.zuul.exception.ZuulException;</span><br><span class="line">import org.springframework.http.HttpStatus;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.Writer;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/26 11:31</span><br><span class="line"> * @Description:自定义过滤器</span><br><span class="line"> */</span><br><span class="line">@Component</span><br><span class="line">public class MyFilter extends ZuulFilter &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:返回一个字符串代表过滤器的类型</span><br><span class="line">     * @param:</span><br><span class="line">     * @return: String</span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/26 11:40</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public String filterType() &#123;</span><br><span class="line">        return &quot;pre&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:过滤的顺序</span><br><span class="line">     * @param: </span><br><span class="line">     * @return: </span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/26 11:41</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public int filterOrder() &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:这里可以写逻辑判断，是否要过滤，本文true,永远过滤。</span><br><span class="line">     * @param: </span><br><span class="line">     * @return: </span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/26 11:41</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public boolean shouldFilter() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:过滤器的具体逻辑。可用很复杂，包括查sql，nosql去判断该请求到底有没有权限访问。</span><br><span class="line">     * @param:</span><br><span class="line">     * @return: </span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/26 11:42</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public Object run() throws ZuulException &#123;</span><br><span class="line">        RequestContext context = RequestContext.getCurrentContext();</span><br><span class="line">        //获取request</span><br><span class="line">        HttpServletRequest request = context.getRequest();</span><br><span class="line">        //获取token</span><br><span class="line">        String token = request.getParameter(&quot;token&quot;);</span><br><span class="line">        if (token==null)&#123;</span><br><span class="line">            context.setSendZuulResponse(false);</span><br><span class="line">            context.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());</span><br><span class="line">            Writer writer=null;</span><br><span class="line">            try &#123;</span><br><span class="line">                //获取输入流</span><br><span class="line">                writer=context.getResponse().getWriter();</span><br><span class="line">                writer.write(&quot;token is Empty&quot;);</span><br><span class="line">            &#125; catch (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;finally &#123;</span><br><span class="line">                if (writer!=null)&#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        writer.close();</span><br><span class="line">                    &#125; catch (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>方法说明：</p>
 <ul>
@@ -814,9 +814,9 @@
 <li>run：过滤器的具体逻辑。可用很复杂，包括查sql，nosql去判断该请求到底有没有权限访问</li>
 </ul>
 <p>不带token访问：<a href="http://localhost:8950/api-ribbon/C1/hello" target="_blank" rel="noopener">http://localhost:8950/api-ribbon/C1/hello</a></p>
-<p><img src="_v_images/_apiribbon_1543224143_25322.png" width="700" hegiht="300"></p>
+<p><img src="/cgy.github.io/2019/01/14/(五）路由网关(Zuul)/_apiribbon_1543224143_25322.png" width="700" hegiht="300"></p>
 <p>带token访问：<a href="http://localhost:8950/api-feign/C1/hello?token=token" target="_blank" rel="noopener">http://localhost:8950/api-feign/C1/hello?token=token</a></p>
-<p><img src="_v_images/_apifeign_1543224196_12373.png" width="700" hegiht="300"></p>
+<p><img src="/cgy.github.io/2019/01/14/(五）路由网关(Zuul)/_apifeign_1543224196_12373.png" width="700" hegiht="300"></p>
 
           
         
@@ -949,12 +949,12 @@
 <li>Chen-Eureka-Client（CHEN-EUREKA-CLIENT服务一）</li>
 <li>Chen-Eureka-Client-Two（CHEN-EUREKA-CLIENT-TWO服务二）</li>
 </ul>
-<p><img src="_v_images/_浏览器访问serve_1542880320_14070.png" width="700" hegiht="313" align="center"></p>
+<p><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_浏览器访问serve_1542880320_14070.png" width="700" hegiht="313" align="center"></p>
 <h2 id="创建服务消费者"><a href="#创建服务消费者" class="headerlink" title="创建服务消费者"></a>创建服务消费者</h2><ul>
 <li>新创建一个项目Chen-Service-Ribbon，和Chen-Eureka-Client类似</li>
 <li>右键，New&gt;&gt;Module&gt;&gt;Spring Init&gt;&gt;填写项目maven信息&gt;&gt;选择依赖&gt;&gt;填写项目名称</li>
 </ul>
-<p><img src="_v_images/_ribbon_1542940384_11380.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_ribbon_1542940384_11380.png" width="700" hegiht="313"></p>
 <p>主要包含这三个依赖</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- web --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- eureka discovery --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- ribbon --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-ribbon&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
 <h2 id="项目启动类"><a href="#项目启动类" class="headerlink" title="项目启动类"></a>项目启动类</h2><p>通过@EnableDiscoveryClient向服务中心注册<br>并且向程序的ioc注入一个bean: restTemplate;并通过@LoadBalanced注解表明这个restRemplate开启负载均衡的功能</p>
@@ -967,8 +967,8 @@
 <p>控制层HelloController</p>
 <figure class="highlight plain"><figcaption><span>com.chen.chenserviceribbon.controller;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import com.chen.chenserviceribbon.servcie.HelloService;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/23 11:09</span><br><span class="line"> * @Description:</span><br><span class="line"> */</span><br><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/C1&quot;)</span><br><span class="line">public class HelloController &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private HelloService helloService;</span><br><span class="line">    /**</span><br><span class="line">     * 功能描述:</span><br><span class="line">     * @param: 模拟调用</span><br><span class="line">     * @return:</span><br><span class="line">     * @auther: chen</span><br><span class="line">     * @date: 2018/11/23 11:12</span><br><span class="line">     */</span><br><span class="line">    @RequestMapping(&quot;/hello&quot;)</span><br><span class="line">    public String hello() &#123;</span><br><span class="line">        return helloService.showPort();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>访问页面</p>
-<p><img src="_v_images/_service_1542943643_16686.png" width="700" hegiht="313" align="center"><br><img src="_v_images/_8910_1542943794_13114.png" width="700" hegiht="313" align="center"><br><img src="_v_images/_8920_1542943830_23810.png" width="700" hegiht="313" align="center"></p>
-<p>这说明当我们通过调用restTemplate.getForObject(“<a href="http://CHEN-EUREKA-CLIENT/C1/showPort“" target="_blank" rel="noopener">http://CHEN-EUREKA-CLIENT/C1/showPort“</a>, String.class);方法时，已经做了负载均衡，访问了不同的端口的服务实例。<br><img src="_v_images/_架构_1542944988_6742.png" width="700" hegiht="313" align="center"></p>
+<p><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_service_1542943643_16686.png" width="700" hegiht="313" align="center"><br><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_8910_1542943794_13114.png" width="700" hegiht="313" align="center"><br><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_8920_1542943830_23810.png" width="700" hegiht="313" align="center"></p>
+<p>这说明当我们通过调用restTemplate.getForObject(“<a href="http://CHEN-EUREKA-CLIENT/C1/showPort“" target="_blank" rel="noopener">http://CHEN-EUREKA-CLIENT/C1/showPort“</a>, String.class);方法时，已经做了负载均衡，访问了不同的端口的服务实例。<br><img src="/cgy.github.io/2019/01/14/(二）服务消费者（ribbon+restTemplate)/_架构_1542944988_6742.png" width="700" hegiht="313" align="center"></p>
 <ul>
 <li>一个服务注册中心，Eureka Server,端口为8900</li>
 <li>AHUT-EUREKA-CLIENT工程跑了两个实例，端口分别为8910,8920，分别向服务注册中心注册</li>
@@ -1106,12 +1106,12 @@
 <li>Chen-Eureka-Client（CHEN-EUREKA-CLIENT服务一）</li>
 <li>Chen-Eureka-Client-Two（CHEN-EUREKA-CLIENT服务二）</li>
 </ul>
-<p><img src="_v_images/_浏览器访问serve_1542880320_14070.png" width="700" hegiht="313" align="center"></p>
+<p><img src="/cgy.github.io/2019/01/14/(三）服务消费者(feign)/_浏览器访问serve_1542880320_14070.png" width="700" hegiht="313" align="center"></p>
 <h2 id="创建服务消费者"><a href="#创建服务消费者" class="headerlink" title="创建服务消费者"></a>创建服务消费者</h2><ul>
 <li>新创建一个项目Chen-Service-Feign，和Chen-Eureka-Client类似</li>
 <li>右键，New&gt;&gt;Module&gt;&gt;Spring Init&gt;&gt;填写项目maven信息&gt;&gt;选择依赖&gt;&gt;填写项目名称</li>
 </ul>
-<p><img src="_v_images/_feign_1542954704_31529.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(三）服务消费者(feign)/_feign_1542954704_31529.png" width="700" hegiht="313"></p>
 <p>主要包含这三个依赖</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- web --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- eureka discovery --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line"> &lt;!--feign --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-feign&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
 <p>项目配置文件application.properties<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 配置服务器端口</span><br><span class="line">server.port=8940</span><br><span class="line"># spring项目名称</span><br><span class="line">spring.application.name=CHEN-SERVICE-FEIGN</span><br><span class="line"># 配置注册中心</span><br><span class="line">eureka.client.service-url.defaultZone=http://localhost:8900/eureka/</span><br></pre></td></tr></table></figure></p>
@@ -1121,11 +1121,11 @@
 <figure class="highlight plain"><figcaption><span>com.chen.chenservicefeign.service;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import org.springframework.cloud.netflix.feign.FeignClient;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/23 14:42</span><br><span class="line"> * @Description:</span><br><span class="line"> */</span><br><span class="line">@FeignClient(value = &quot;CHEN-EUREKA-CLIENT&quot;)</span><br><span class="line">public interface HelloService &#123;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/login/showPort&quot;)</span><br><span class="line">    String showPort();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * @description: 演示带参数</span><br><span class="line">     */</span><br><span class="line">    //@GetMapping(value = &quot;/demo&quot;)</span><br><span class="line">    //void demo(@RequestParam(value = &quot;name&quot;) String name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="控制层HelloController"><a href="#控制层HelloController" class="headerlink" title="控制层HelloController"></a>控制层HelloController</h2><figure class="highlight plain"><figcaption><span>com.chen.chenservicefeign.controller;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import com.chen.chenservicefeign.service.HelloService;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @Auther: chen</span><br><span class="line"> * @Date: 2018/11/23 14:47</span><br><span class="line"> * @Description:</span><br><span class="line"> */</span><br><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/C1&quot;)</span><br><span class="line">public class HelloController &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private HelloService helloService;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * @description: 模拟调用</span><br><span class="line">     */</span><br><span class="line">    @RequestMapping(value = &quot;/hello&quot;)</span><br><span class="line">    public String hello() &#123;</span><br><span class="line">        return helloService.showPort();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>访问页面</p>
-<p><img src="_v_images/_servcie_1542956004_11411.png" width="700" hegiht="313" align="center"></p>
+<p><img src="/cgy.github.io/2019/01/14/(三）服务消费者(feign)/_servcie_1542956004_11411.png" width="700" hegiht="313" align="center"></p>
 <p>访问你设置的地址以下为我自己的地址：</p>
-<p><img src="_v_images/_8910_1542943794_13114.png" width="700" hegiht="313" align="center"><br><img src="_v_images/_8920_1542943830_23810.png" width="700" hegiht="313" align="center"></p>
+<p><img src="/cgy.github.io/2019/01/14/(三）服务消费者(feign)/_8910_1542943794_13114.png" width="700" hegiht="313" align="center"><br><img src="/cgy.github.io/2019/01/14/(三）服务消费者(feign)/_8920_1542943830_23810.png" width="700" hegiht="313" align="center"></p>
 <p>项目架构</p>
-<p><img src="_v_images/_jiagou_1542955788_13008.png" width="700" hegiht="313" align="center"></p>
+<p><img src="/cgy.github.io/2019/01/14/(三）服务消费者(feign)/_jiagou_1542955788_13008.png" width="700" hegiht="313" align="center"></p>
 
           
         
@@ -1263,13 +1263,13 @@
 <li>Chen-Config-Client-Two（读取配置</li>
 </ul>
 <p>访问eureka </p>
-<p><img src="_v_images/_eureka_1543472428_22945.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_eureka_1543472428_22945.png" width="600" hegiht="100"></p>
 <p>此时访问 </p>
 <ul>
 <li>Chen-Config-Client <a href="http://localhost:8970/v1/token" target="_blank" rel="noopener">http://localhost:8970/v1/token</a> </li>
 <li>Chen-Config-Client-Two <a href="http://localhost:8980/v1/token" target="_blank" rel="noopener">http://localhost:8980/v1/token</a></li>
 </ul>
-<p><img src="_v_images/_fangwen_1543472537_5916.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_fangwen_1543472537_5916.png" width="600" hegiht="100"></p>
 <p>修改github仓库中的属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">token=the token change to chen</span><br></pre></td></tr></table></figure></p>
 <p>此时访问 </p>
 <ul>
@@ -1282,15 +1282,15 @@
 <p>使用的是post方法<br>访问的是config client，而不是config server<br>另外，/bus/refresh接口可以指定服务，即使用”destination”参数，比如 “/bus/refresh?destination=customers:**” 即刷新服务名为customers的所有服务，不管ip</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8970/bus/refresh</span><br></pre></td></tr></table></figure>
 <p>等同于<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8970/bus/refresh?destination=CHEN-CONFIG-CLIENT:**</span><br></pre></td></tr></table></figure></p>
-<p><img src="_v_images/_postreques_1543472952_11899.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_postreques_1543472952_11899.png" width="600" hegiht="100"></p>
 <p>此时再次访问 </p>
 <ul>
 <li>Chen-Config-Client <a href="http://localhost:8970/v1/token" target="_blank" rel="noopener">http://localhost:8970/v1/token</a> </li>
 <li>Chen-Config-Client-Two <a href="http://localhost:8980/v1/token" target="_blank" rel="noopener">http://localhost:8980/v1/token</a></li>
 </ul>
-<p><img src="_v_images/_fangwen_1543473081_24604.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_fangwen_1543473081_24604.png" width="600" hegiht="100"></p>
 <p>此时架构</p>
-<p><img src="_v_images/_jiagou_1543473160_28267.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_jiagou_1543473160_28267.png" width="600" hegiht="100"></p>
 <p>当git文件更改的时候</p>
 <p>通过pc端用post 向端口为8970的CHEN-CONFIG-CLIENT发送请求/bus/refresh</p>
 <p>此时8970端口会发送一个消息</p>

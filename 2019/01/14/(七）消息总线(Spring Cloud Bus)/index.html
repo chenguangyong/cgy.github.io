@@ -86,16 +86,16 @@
 <meta property="og:site_name" content="一粒兴陈">
 <meta property="og:description" content="简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖12345678910111213141516171819&amp;lt">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_eureka_1543472428_22945.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_fangwen_1543472537_5916.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_postreques_1543472952_11899.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_fangwen_1543473081_24604.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_jiagou_1543473160_28267.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_eureka_1543472428_22945.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_fangwen_1543472537_5916.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_postreques_1543472952_11899.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_fangwen_1543473081_24604.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_jiagou_1543473160_28267.png">
 <meta property="og:updated_time" content="2019-01-14T07:07:43.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="(七）消息总线(Spring Cloud Bus)">
 <meta name="twitter:description" content="简介Spring Cloud Bus 将分布式的节点用轻量的消息代理连接起来。它可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。本文要讲述的是用Spring Cloud Bus实现通知微服务架构的配置文件的更改。 前提你的电脑的提前安装好RabbitMq 改造Chen-Config-Client项目项目pom文件添加依赖12345678910111213141516171819&amp;lt">
-<meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_v_images/_eureka_1543472428_22945.png">
+<meta name="twitter:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(七）消息总线(Spring%20Cloud%20Bus)/_eureka_1543472428_22945.png">
 
 
 
@@ -384,13 +384,13 @@
 <li>Chen-Config-Client-Two（读取配置</li>
 </ul>
 <p>访问eureka </p>
-<p><img src="_v_images/_eureka_1543472428_22945.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_eureka_1543472428_22945.png" width="600" hegiht="100"></p>
 <p>此时访问 </p>
 <ul>
 <li>Chen-Config-Client <a href="http://localhost:8970/v1/token" target="_blank" rel="noopener">http://localhost:8970/v1/token</a> </li>
 <li>Chen-Config-Client-Two <a href="http://localhost:8980/v1/token" target="_blank" rel="noopener">http://localhost:8980/v1/token</a></li>
 </ul>
-<p><img src="_v_images/_fangwen_1543472537_5916.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_fangwen_1543472537_5916.png" width="600" hegiht="100"></p>
 <p>修改github仓库中的属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">token=the token change to chen</span><br></pre></td></tr></table></figure></p>
 <p>此时访问 </p>
 <ul>
@@ -403,15 +403,15 @@
 <p>使用的是post方法<br>访问的是config client，而不是config server<br>另外，/bus/refresh接口可以指定服务，即使用”destination”参数，比如 “/bus/refresh?destination=customers:**” 即刷新服务名为customers的所有服务，不管ip</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8970/bus/refresh</span><br></pre></td></tr></table></figure>
 <p>等同于<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8970/bus/refresh?destination=CHEN-CONFIG-CLIENT:**</span><br></pre></td></tr></table></figure></p>
-<p><img src="_v_images/_postreques_1543472952_11899.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_postreques_1543472952_11899.png" width="600" hegiht="100"></p>
 <p>此时再次访问 </p>
 <ul>
 <li>Chen-Config-Client <a href="http://localhost:8970/v1/token" target="_blank" rel="noopener">http://localhost:8970/v1/token</a> </li>
 <li>Chen-Config-Client-Two <a href="http://localhost:8980/v1/token" target="_blank" rel="noopener">http://localhost:8980/v1/token</a></li>
 </ul>
-<p><img src="_v_images/_fangwen_1543473081_24604.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_fangwen_1543473081_24604.png" width="600" hegiht="100"></p>
 <p>此时架构</p>
-<p><img src="_v_images/_jiagou_1543473160_28267.png" width="600" hegiht="100"></p>
+<p><img src="/cgy.github.io/2019/01/14/(七）消息总线(Spring Cloud Bus)/_jiagou_1543473160_28267.png" width="600" hegiht="100"></p>
 <p>当git文件更改的时候</p>
 <p>通过pc端用post 向端口为8970的CHEN-CONFIG-CLIENT发送请求/bus/refresh</p>
 <p>此时8970端口会发送一个消息</p>

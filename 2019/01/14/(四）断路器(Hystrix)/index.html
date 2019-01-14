@@ -86,23 +86,23 @@
 <meta property="og:site_name" content="一粒兴陈">
 <meta property="og:description" content="在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_request_1542957106_31699.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_hystrix1_1542957273_15466.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_service_1542961880_976.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen_1542962032_5519.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen1_1542962165_24108.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_jiagou_1542962312_10677.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_jiagou_1542963349_14894.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_eurka_1542966512_26528.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_hystrix_1542966659_32128.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_hystrix_1542966899_11671.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen_1542968016_24989.png">
-<meta property="og:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_fangwen_1542968134_27742.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_request_1542957106_31699.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_hystrix1_1542957273_15466.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_service_1542961880_976.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen_1542962032_5519.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen1_1542962165_24108.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_jiagou_1542962312_10677.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_jiagou_1542963349_14894.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_eurka_1542966512_26528.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_hystrix_1542966659_32128.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_hystrix_1542966899_11671.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen_1542968016_24989.png">
+<meta property="og:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen_1542968134_27742.png">
 <meta property="og:updated_time" content="2019-01-14T07:09:22.081Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="(四）断路器(Hystrix)">
 <meta name="twitter:description" content="在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫">
-<meta name="twitter:image" content="https://chenguangyong.github.io/2019/01/14/(四）断路器(Hystrix)/_v_images/_request_1542957106_31699.png">
+<meta name="twitter:image" content="https://chenguangyong.github.io/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_request_1542957106_31699.png">
 
 
 
@@ -377,8 +377,8 @@
       
         <p>在微服务架构中，根据业务来拆分成一个个的服务，服务与服务之间可以相互调用（RPC），在Spring Cloud可以用RestTemplate+Ribbon和Feign来调用。为了保证其高可用，单个服务通常会集群部署。由于网络原因或者自身的原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，此时若有大量的请求涌入，Servlet容器的线程资源会被消耗完毕，导致服务瘫痪。服务与服务之间的依赖性，故障会传播，会对整个微服务系统造成灾难性的严重后果，这就是服务故障的“雪崩”效应。</p>
 <p><em>为了解决这个问题，业界提出了断路器模型。</em></p>
-<h2 id="断路器介绍"><a href="#断路器介绍" class="headerlink" title="断路器介绍"></a>断路器介绍</h2><p>Netflix开源了Hystrix组件，实现了断路器模式，SpringCloud对这一组件进行了整合。 在微服务架构中，一个请求需要调用多个服务是非常常见的，如下图：<br><img src="_v_images/_request_1542957106_31699.png" width="700" hegiht="313"></p>
-<p>较底层的服务如果出现故障，会导致连锁故障。当对特定的服务的调用的不可用达到一个阀值（Hystric 是5秒20次） 断路器将会被打开。<br><img src="_v_images/_hystrix1_1542957273_15466.png" width="700" hegiht="313"><br>断路打开后，可用避免连锁故障，fallback方法可以直接返回一个固定值。</p>
+<h2 id="断路器介绍"><a href="#断路器介绍" class="headerlink" title="断路器介绍"></a>断路器介绍</h2><p>Netflix开源了Hystrix组件，实现了断路器模式，SpringCloud对这一组件进行了整合。 在微服务架构中，一个请求需要调用多个服务是非常常见的，如下图：<br><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_request_1542957106_31699.png" width="700" hegiht="313"></p>
+<p>较底层的服务如果出现故障，会导致连锁故障。当对特定的服务的调用的不可用达到一个阀值（Hystric 是5秒20次） 断路器将会被打开。<br><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_hystrix1_1542957273_15466.png" width="700" hegiht="313"><br>断路打开后，可用避免连锁故障，fallback方法可以直接返回一个固定值。</p>
 <h2 id="在Ribbon中使用断路器"><a href="#在Ribbon中使用断路器" class="headerlink" title="在Ribbon中使用断路器"></a>在Ribbon中使用断路器</h2><p>改造之前的Chen-Service-Ribbon项目</p>
 <p>pom.xml文件中添加hystrix的依赖</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;!-- 使用@HystrixCommand 必须引入--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">     &lt;groupId&gt;com.netflix.hystrix&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;hystrix-javanica&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
@@ -391,13 +391,13 @@
 <li>Chen-Eureka-Client（CHEN-EUREKA-CLIENT服务一）</li>
 <li>Chen-Service-Ribbon（CHEN-SERVICE-RIBBON服务消费者）</li>
 </ul>
-<p><img src="_v_images/_service_1542961880_976.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_service_1542961880_976.png" width="700" hegiht="313"></p>
 <p>访问Ahut-Service-Ribbon <a href="http://localhost:8930/C1/hello" target="_blank" rel="noopener">http://localhost:8930/C1/hello</a> </p>
-<p><img src="_v_images/_fangwen_1542962032_5519.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen_1542962032_5519.png" width="700" hegiht="313"></p>
 <p>此时，关闭Chen-Eureka-Client服务，再次访问Chen-Service-Ribbon<br><a href="http://localhost:8930/C1/hello" target="_blank" rel="noopener">http://localhost:8930/C1/hello</a></p>
-<p><img src="_v_images/_fangwen1_1542962165_24108.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen1_1542962165_24108.png" width="700" hegiht="313"></p>
 <p>这就说明当 Chen-Eureka-Client 工程不可用的时候，Chen-Service-Ribbon调用 Chen-Eureka-Client的API接口时，会执行快速失败，直接返回一组字符串，而不是等待响应超时，这很好的控制了容器的线程阻塞</p>
-<h3 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h3><p><img src="_v_images/_jiagou_1542962312_10677.png" width="700" hegiht="313"></p>
+<h3 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h3><p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_jiagou_1542962312_10677.png" width="700" hegiht="313"></p>
 <h2 id="在Feign中使用断路器"><a href="#在Feign中使用断路器" class="headerlink" title="在Feign中使用断路器"></a>在Feign中使用断路器</h2><p>Feign是自带断路器的，在D版本的Spring Cloud中，它没有默认打开。需要在配置文件中配置打开它。</p>
 <ul>
 <li>改造之前的Chen-Service-Feign项目</li>
@@ -418,7 +418,7 @@
 <li>3.此时关闭Chen-Eureka-Client-One项目，再次访问Chen-Service-Feign项目 <a href="http://localhost:8940/C1/hello：" target="_blank" rel="noopener">http://localhost:8940/C1/hello：</a> </li>
 </ul>
 <p>可以看到断路器起作用（不再截图）</p>
-<p><img src="_v_images/_jiagou_1542963349_14894.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_jiagou_1542963349_14894.png" width="700" hegiht="313"></p>
 <h2 id="断路器：Hystrix-仪表盘-Hystrix-Dashboard"><a href="#断路器：Hystrix-仪表盘-Hystrix-Dashboard" class="headerlink" title="断路器：Hystrix 仪表盘(Hystrix Dashboard )"></a>断路器：Hystrix 仪表盘(Hystrix Dashboard )</h2><p>改造Chen-Service-Ribbon项目，Chen-Service-Feign项目的改造和这个一样</p>
 <ul>
 <li>使用过程不要随便更换依赖镜像否则会报错</li>
@@ -440,35 +440,35 @@
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_eurka_1542966512_26528.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_eurka_1542966512_26528.png" width="700" hegiht="313"></p>
 <ul>
 <li><ol start="2">
 <li>访问hystrix仪表盘 <a href="http://localhost:8930/hystrix" target="_blank" rel="noopener">http://localhost:8930/hystrix</a> </li>
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_hystrix_1542966659_32128.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_hystrix_1542966659_32128.png" width="700" hegiht="313"></p>
 <ul>
 <li><ol start="3">
 <li>修改以下部分：<br>复制浏览器的地址栏，粘贴到输入框，并且加上.stream<br>自定义一个Title<br>修改完后，点击monitor stream，进入下一个页面</li>
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_hystrix_1542966899_11671.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_hystrix_1542966899_11671.png" width="700" hegiht="313"></p>
 <ul>
 <li><ol start="4">
 <li>中间访问一下  Chen-Service-Ribbon项目 <a href="http://localhost:8930/C1/hello" target="_blank" rel="noopener">http://localhost:8930/C1/hello</a> </li>
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_fangwen_1542968016_24989.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen_1542968016_24989.png" width="700" hegiht="313"></p>
 <ul>
 <li><ol start="5">
 <li>刷新下刚才进入的监控界面</li>
 </ol>
 </li>
 </ul>
-<p><img src="_v_images/_fangwen_1542968134_27742.png" width="700" hegiht="313"></p>
+<p><img src="/cgy.github.io/2019/01/14/(四）断路器(Hystrix)/_fangwen_1542968134_27742.png" width="700" hegiht="313"></p>
 <p>如果出现问题：不能监控，参考<br><a href="https://www.cnblogs.com/mark7/p/8920288.html" target="_blank" rel="noopener">https://www.cnblogs.com/mark7/p/8920288.html</a></p>
 
       
